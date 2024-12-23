@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "download": "tsx scripts/downloadFile.ts"
+    "download": "./scripts/download.sh"
   },
   "dependencies": {
     "next": "15.1.2",
