@@ -42,6 +42,7 @@ function lambert93ToViewBox(
 export default function Home() {
   const [franceData, setFranceData] = useState<GeoJSON.FeatureCollection | null>(null);
   const [communesData, setCommunesData] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [filteredCommunes, setFilteredCommunes] = useState<GeoJSON.Feature[]>([]);
   const [inputValue, setInputValue] = useState<string | null>(null);
 
   useEffect(() => {
@@ -55,6 +56,22 @@ export default function Home() {
       .then(data => setCommunesData(data))
       .catch(err => console.error(err));
   }, []);
+
+  useEffect(() => {
+    async function filterCommunes () {
+      if (inputValue && inputValue.length > 1 && communesData) {
+        setFilteredCommunes(communesData.features.filter(
+          feature => feature.properties && (
+            feature.properties.NOM.toLowerCase().includes(inputValue.toLowerCase())
+          )
+        ));
+      } else {
+        setFilteredCommunes([]);
+      }
+    };
+
+    filterCommunes();
+  }, [inputValue]);
 
   if (!franceData || !communesData) {
     return <div>Loading...</div>;
@@ -81,14 +98,11 @@ export default function Home() {
         franceData={franceData}
         lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)}
       />
-      {inputValue && communesData.features.filter(
-          feature => feature.properties && (
-            feature.properties.NOM.toLowerCase().includes(inputValue.toLowerCase())
-        )
-      ).map(feature => {
+      {filteredCommunes.map(feature => {
         return <Ville
-        ville={feature}
-        lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} />
+          key={feature.properties && feature.properties.ID}
+          ville={feature}
+          lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} />
       })};
     </svg>
   </div>;
