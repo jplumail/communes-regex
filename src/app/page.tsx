@@ -37,9 +37,8 @@ function computeBoundingBox(
 export default function Home() {
   const [franceData, setFranceData] = useState<GeoJSON.FeatureCollection | null>(null);
   const [communesData, setCommunesData] = useState<GeoJSON.FeatureCollection | null>(null);
-  const [filteredCommunes, setFilteredCommunes] = useState<GeoJSON.Feature[]>([]);
   const [inputValue, setInputValue] = useState<string | null>(null);
-  
+
   let regex: RegExp | null = null;
   if (inputValue) {
     try {
@@ -51,6 +50,8 @@ export default function Home() {
         throw e;
       }
     }
+  } else {
+    regex = null;
   }
 
   useEffect(() => {
@@ -65,21 +66,15 @@ export default function Home() {
       .catch(err => console.error(err));
   }, []);
 
-  useEffect(() => {
-    async function filterCommunes () {
-      if (inputValue && inputValue.length > 1 && communesData && regex) {
-        setFilteredCommunes(communesData.features.filter(
-          feature => feature.properties && (
-            regex.test(feature.properties.NOM)
-          )
-        ));
-      } else {
-        setFilteredCommunes([]);
-      }
-    };
-
-    filterCommunes();
-  }, [inputValue]);
+  function isVilleFiltered(ville: GeoJSON.Feature): boolean {
+    if (!inputValue || ville.properties == null) {
+      return false;
+    }
+    if (regex == null) {
+      return true;
+    }
+    return regex.test(ville.properties.NOM)
+  }
 
   if (!franceData || !communesData) {
     return <div>Loading...</div>;
@@ -105,18 +100,19 @@ export default function Home() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox={`0 0 ${(maxX - minX)*scale} ${(maxY - minY)*scale}`}
+      viewBox={`0 0 ${(maxX - minX) * scale} ${(maxY - minY) * scale}`}
       id={styles.map}
     >
       <France
         franceData={franceData}
         lambert93ToViewBox={lambert93ToViewBox}
       />
-      {filteredCommunes.map(feature => {
+      {communesData.features.map(feature => {
         return <Ville
           key={feature.properties && feature.properties.ID}
           ville={feature}
-          lambert93ToViewBox={lambert93ToViewBox} />
+          lambert93ToViewBox={lambert93ToViewBox}
+          visible={isVilleFiltered(feature)} />
       })};
     </svg>
   </div>;

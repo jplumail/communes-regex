@@ -1,6 +1,11 @@
 .pointGroup {
     --radius: 2; /* 3km */
     --display-label: none;
+    display: none;
+}
+
+.pointGroup.visible {
+    display: block;
 }
 
 .pointGroup:hover {
@@ -22,7 +27,7 @@
     display: var(--display-label);
 }
 
-#map svg {
+#map {
     overflow: visible;
 }
 
