@@ -1,0 +1,11 @@
+.point {
+    fill: red;
+    --radius: 3000; /* 3km */
+    r: var(--radius);
+    stroke: transparent; /* Ajouter une zone tampon autour */
+    stroke-width: 10000; /* Largeur pour survol sans affecter le visuel */
+}
+
+.point:hover {
+    --radius: 10000;
+}
