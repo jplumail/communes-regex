@@ -44,6 +44,19 @@ export default function Home() {
   const [communesData, setCommunesData] = useState<GeoJSON.FeatureCollection | null>(null);
   const [filteredCommunes, setFilteredCommunes] = useState<GeoJSON.Feature[]>([]);
   const [inputValue, setInputValue] = useState<string | null>(null);
+  
+  let regex: RegExp | null = null;
+  if (inputValue) {
+    try {
+      regex = new RegExp(inputValue, 'i');
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        regex = null;
+      } else {
+        throw e;
+      }
+    }
+  }
 
   useEffect(() => {
     fetch("regions_map.geojson")
@@ -59,10 +72,10 @@ export default function Home() {
 
   useEffect(() => {
     async function filterCommunes () {
-      if (inputValue && inputValue.length > 1 && communesData) {
+      if (inputValue && inputValue.length > 1 && communesData && regex) {
         setFilteredCommunes(communesData.features.filter(
           feature => feature.properties && (
-            feature.properties.NOM.toLowerCase().includes(inputValue.toLowerCase())
+            regex.test(feature.properties.NOM)
           )
         ));
       } else {
