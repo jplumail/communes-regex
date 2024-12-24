@@ -5,7 +5,7 @@ export default function Ville({
 }: {
     ville: GeoJSON.Feature, lambert93ToViewBox: (lambert93: GeoJSON.Position) => GeoJSON.Position
 }) {
-    if (ville.geometry.type == "Point") {
-        return <Point point={ville.geometry} lambert93ToViewBox={lambert93ToViewBox}/>;
+    if (ville.geometry.type == "Point" && ville.properties) {
+        return <Point name={ville.properties.NOM} point={ville.geometry} lambert93ToViewBox={lambert93ToViewBox}/>;
     }
 }

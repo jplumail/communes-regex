@@ -1,11 +1,33 @@
-.point {
-    fill: red;
-    --radius: 3000; /* 3km */
-    r: var(--radius);
-    stroke: transparent; /* Ajouter une zone tampon autour */
-    stroke-width: 10000; /* Largeur pour survol sans affecter le visuel */
+.pointGroup {
+    --radius: 2; /* 3km */
+    --display-label: none;
 }
 
-.point:hover {
-    --radius: 10000;
+.pointGroup:hover {
+    --radius: 4;
+    --display-label: block;
+}
+
+.point {
+    fill: red;
+    r: var(--radius);
+    stroke: transparent; /* Ajouter une zone tampon autour */
+    stroke-width: 2; /* Largeur pour survol sans affecter le visuel */
+}
+
+.label {
+    font-size: 1rem;
+    font-weight: bold;
+    fill: var(--foreground);
+    display: var(--display-label);
+}
+
+#map svg {
+    overflow: visible;
+}
+
+#map polygon {
+    fill: var(--map-color);
+    stroke: var(--foreground);
+    stroke-width: 2;
 }

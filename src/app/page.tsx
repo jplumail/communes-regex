@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import France from './france';
 import Ville from './ville';
+import styles from './styles.module.css';
 
 function computeBoundingBox(
   features: GeoJSON.Feature[]
@@ -31,12 +32,6 @@ function computeBoundingBox(
     }
   });
   return { minX, minY, maxX, maxY };
-}
-
-function lambert93ToViewBox(
-  lambert93: GeoJSON.Position, offsetX: number, offsetY: number
-): GeoJSON.Position {
-  return [lambert93[0] - offsetX, lambert93[1] - offsetY];
 }
 
 export default function Home() {
@@ -91,8 +86,14 @@ export default function Home() {
   }
 
   const { minX, minY, maxX, maxY } = computeBoundingBox(franceData.features);
-  const offsetX = minX;
-  const offsetY = minY;
+  const maxDimension = Math.max(maxX - minX, maxY - minY);
+  const scale = 500 / maxDimension;
+
+  function lambert93ToViewBox(
+    lambert93: GeoJSON.Position
+  ): GeoJSON.Position {
+    return [(lambert93[0] - minX) * scale, ((maxY - lambert93[1])) * scale];
+  }
 
   return <div style={{ height: '500px', width: '500px' }}>
     <input
@@ -104,18 +105,18 @@ export default function Home() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox={`${minX - offsetX} ${minY - offsetY} ${maxX - offsetX} ${maxY - offsetY}`}
-      transform="scale(1, -1)"
+      viewBox={`0 0 ${(maxX - minX)*scale} ${(maxY - minY)*scale}`}
+      id={styles.map}
     >
       <France
         franceData={franceData}
-        lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)}
+        lambert93ToViewBox={lambert93ToViewBox}
       />
       {filteredCommunes.map(feature => {
         return <Ville
           key={feature.properties && feature.properties.ID}
           ville={feature}
-          lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} />
+          lambert93ToViewBox={lambert93ToViewBox} />
       })};
     </svg>
   </div>;
