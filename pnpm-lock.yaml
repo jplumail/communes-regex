@@ -18,6 +18,9 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
     devDependencies:
+      '@types/geojson':
+        specifier: ^7946.0.15
+        version: 7946.0.15
       '@types/node':
         specifier: ^20
         version: 20.17.10
@@ -344,6 +347,9 @@ packages:
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@types/geojson@7946.0.15':
+    resolution: {integrity: sha512-9oSxFzDCT2Rj6DfcHF8G++jxBKS7mBqXl5xrRW+Kbvjry6Uduya2iiwqHPhVXpasAVMBYKkEPGgKhd3+/HZ6xA==}
 
   '@types/node@20.17.10':
     resolution: {integrity: sha512-/jrvh5h6NXhEauFFexRin69nA0uHJ5gwk4iDivp/DeoEua3uwCUto6PC86IpRITBOs4+6i2I56K5x5b6WYGXHA==}
@@ -685,6 +691,8 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@types/geojson@7946.0.15': {}
 
   '@types/node@20.17.10':
     dependencies:
