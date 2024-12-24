@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import France from './france';
 import Ville from './ville';
 
-function computeBoundingBox(features: GeoJSON.Feature[]): { minX: number, minY: number, maxX: number, maxY: number } {
+function computeBoundingBox(
+  features: GeoJSON.Feature[]
+): { minX: number, minY: number, maxX: number, maxY: number } {
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
@@ -31,7 +33,9 @@ function computeBoundingBox(features: GeoJSON.Feature[]): { minX: number, minY: 
   return { minX, minY, maxX, maxY };
 }
 
-function lambert93ToViewBox(lambert93: GeoJSON.Position, offsetX: number, offsetY: number): GeoJSON.Position {
+function lambert93ToViewBox(
+  lambert93: GeoJSON.Position, offsetX: number, offsetY: number
+): GeoJSON.Position {
   return [lambert93[0] - offsetX, lambert93[1] - offsetY];
 }
 
@@ -73,10 +77,19 @@ export default function Home() {
       viewBox={`${minX - offsetX} ${minY - offsetY} ${maxX - offsetX} ${maxY - offsetY}`}
       transform="scale(1, -1)"
     >
-      <France franceData={franceData} lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} />
+      <France
+        franceData={franceData}
+        lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)}
+      />
       {inputValue && communesData.features.filter(
-        feature => feature.properties && feature.properties.NOM.toLowerCase().includes(inputValue.toLowerCase())
-      ).map((feature, index) => { return <Ville ville={feature} lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} /> })};
+          feature => feature.properties && (
+            feature.properties.NOM.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      ).map(feature => {
+        return <Ville
+        ville={feature}
+        lambert93ToViewBox={(coord) => lambert93ToViewBox(coord, offsetX, offsetY)} />
+      })};
     </svg>
   </div>;
 }
