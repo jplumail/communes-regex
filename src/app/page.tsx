@@ -2,30 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import France from './france';
-import Ville from './ville';
 import styles from './styles.module.css';
 import computeBoundingBox from './utils';
+import Villes from './villes';
 
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState<string | null>(null);
   const [franceData, setFranceData] = useState<GeoJSON.FeatureCollection | null>(null);
   const [communesData, setCommunesData] = useState<GeoJSON.FeatureCollection | null>(null);
-  const [inputValue, setInputValue] = useState<string | null>(null);
-
-  let regex: RegExp | null = null;
-  if (inputValue) {
-    try {
-      regex = new RegExp(inputValue, 'i');
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        regex = null;
-      } else {
-        throw e;
-      }
-    }
-  } else {
-    regex = null;
-  }
 
   useEffect(() => {
     fetch("regions_map.geojson")
@@ -38,16 +23,6 @@ export default function Home() {
       .then(data => setCommunesData(data))
       .catch(err => console.error(err));
   }, []);
-
-  function isVilleFiltered(ville: GeoJSON.Feature): boolean {
-    if (!inputValue || ville.properties == null) {
-      return false;
-    }
-    if (regex == null) {
-      return true;
-    }
-    return regex.test(ville.properties.NOM)
-  }
 
   if (!franceData || !communesData) {
     return <div>Loading...</div>;
@@ -80,13 +55,7 @@ export default function Home() {
         franceData={franceData}
         lambert93ToViewBox={lambert93ToViewBox}
       />
-      {communesData.features.map(feature => {
-        return <Ville
-          key={feature.properties && feature.properties.ID}
-          ville={feature}
-          lambert93ToViewBox={lambert93ToViewBox}
-          visible={isVilleFiltered(feature)} />
-      })};
+      <Villes inputValue={inputValue} communesData={communesData} lambert93ToViewBox={lambert93ToViewBox} />
     </svg>
   </div>;
 }
