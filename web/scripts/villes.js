@@ -1,10 +1,10 @@
 import { lambert93ToViewBox } from './utils.js';
+import communesData from '/data/communes.geojson?raw'
 
 export async function loadVilles() {
-    const response = await fetch('/data/communes.geojson');
-    const communesData = await response.json();
+    const data = JSON.parse(communesData);
     
-    return communesData.features.map(feature => {
+    return data.features.map(feature => {
         if (feature.geometry.type === "Point" && feature.properties) {
             const [x, y] = lambert93ToViewBox(feature.geometry.coordinates);
             return `

@@ -1,2 +1,4 @@
 /data
 /.firebase
+node_modules/
+dist/

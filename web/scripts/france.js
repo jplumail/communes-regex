@@ -1,10 +1,10 @@
 import { lambert93ToViewBox } from './utils.js';
+import franceData from '/data/regions_map.geojson?raw'
 
 export async function loadFrance() {
-    const response = await fetch('/data/regions_map.geojson');
-    const franceData = await response.json();
+    const data = JSON.parse(franceData);
     
-    return franceData.features.map((feature, index) => {
+    return data.features.map((feature, index) => {
         if (feature.geometry.type === "Polygon") {
             return createPolygon(feature.geometry, index);
         } else if (feature.geometry.type === "MultiPolygon") {

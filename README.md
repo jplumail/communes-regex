@@ -1,14 +1,26 @@
+## Installation
+
+```bash
+pnpm install
+```
+
+## Développement
+
+```bash
+pnpm dev
+```
+
 ## Build
 
 ```bash
 ./download.sh
 ./extract.sh
 uv run scripts/convert.py
+pnpm build
 ```
 
-## Run
+## Déploiement
 
 ```bash
-cd web
-uv run python -m http.server
+firebase deploy
 ```
