@@ -1,10 +1,12 @@
-## Install
+## Build
 
 ```bash
-brew install sevenzip
+./download.sh
+./extract.sh
+uv run scripts/convert.py
 ```
 
-## Launch
+## Run
 
 ```bash
 pnpm dev
