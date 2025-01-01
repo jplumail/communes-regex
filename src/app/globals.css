@@ -34,3 +34,42 @@ a {
     color-scheme: dark;
   }
 }
+
+.pointGroup {
+  --radius: 2; /* 3km */
+  --display-label: none;
+  display: none;
+}
+
+.pointGroup.visible {
+  display: block;
+}
+
+.pointGroup:hover {
+  --radius: 4;
+  --display-label: block;
+}
+
+.point {
+  fill: red;
+  r: var(--radius);
+  stroke: transparent; /* Ajouter une zone tampon autour */
+  stroke-width: 2; /* Largeur pour survol sans affecter le visuel */
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: bold;
+  fill: var(--foreground);
+  display: var(--display-label);
+}
+
+#map {
+  overflow: visible;
+}
+
+#map polygon {
+  fill: var(--map-color);
+  stroke: var(--foreground);
+  stroke-width: 2;
+}

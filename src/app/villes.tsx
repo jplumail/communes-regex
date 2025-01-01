@@ -1,45 +1,35 @@
-import { useState } from "react";
-import Ville from "./ville";
+import { lambert93ToViewBox } from './utils';
+import { promises as fs } from 'node:fs';
 
 
-export default function Villes({ inputValue, communesData, lambert93ToViewBox }: {
-    inputValue: string | null,
-    communesData: GeoJSON.FeatureCollection,
-    lambert93ToViewBox: (lambert93: GeoJSON.Position) => GeoJSON.Position
-}) {
-    let regex: RegExp | null = null;
-    if (inputValue) {
-        try {
-            regex = new RegExp(inputValue, 'i');
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                regex = null;
-            } else {
-                throw e;
-            }
-        }
-    } else {
-        regex = null;
-    }
-
-    function isVilleFiltered(ville: GeoJSON.Feature): boolean {
-        if (!inputValue || ville.properties == null) {
-            return false;
-        }
-        if (regex == null) {
-            return true;
-        }
-        return regex.test(ville.properties.NOM)
-    }
-
-
+export default async function Villes() {
+    const communesData = JSON.parse(await fs.readFile(process.cwd() + '/public/communes_small.geojson', 'utf8')) as GeoJSON.FeatureCollection;
     return communesData.features.map(feature => {
         return <Ville
             key={feature.properties && feature.properties.ID}
             ville={feature}
-            lambert93ToViewBox={lambert93ToViewBox}
-            visible={isVilleFiltered(feature)} />
-    })
-        ;
+        />
+    });
+}
 
+function Ville({ ville }: { ville: GeoJSON.Feature }) {
+    if (ville.geometry.type == "Point" && ville.properties) {
+        return <Point name={ville.properties.NOM} point={ville.geometry} />;
+    }
+}
+
+function Point({
+    point,
+    name
+}: {
+    point: GeoJSON.Point,
+    name: string
+}) {
+    const [x, y] = lambert93ToViewBox(point.coordinates);
+    return <g
+        className="pointGroup"
+    >
+        <circle className="point" cx={x} cy={y} />
+        <text className="label" x={x + 10} y={y}>{name}</text>
+    </g>;
 }
