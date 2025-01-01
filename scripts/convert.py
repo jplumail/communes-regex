@@ -11,8 +11,8 @@ region_shapefile_path = 'data/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18/ADMIN
 # Load the shapefile
 gdf = gpd.read_file(region_shapefile_path)
 
-# Simplify the geometry, 10km tolerance
-tolerance = 1_000
+# Simplify the geometry, 5km tolerance
+tolerance = 5_000
 gdf['geometry'] = gdf['geometry'].simplify(tolerance=tolerance, preserve_topology=True)
 
 # Print the first few rows of the GeoDataFrame
