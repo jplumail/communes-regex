@@ -9,5 +9,6 @@ uv run scripts/convert.py
 ## Run
 
 ```bash
-pnpm dev
+cd web
+uv run python -m http.server
 ```
