@@ -15,6 +15,6 @@ export async function loadVilles() {
         }
         return '';
     })
-    // .filter((_, index) => index < 100) // Pour limiter le nombre de points pendant le développement
+    .filter((_, index) => index < 100) // Pour limiter le nombre de points pendant le développement
     .join('');
 }
