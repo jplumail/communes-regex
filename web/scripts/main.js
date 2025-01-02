@@ -27,15 +27,21 @@ function handleSearch(e) {
     const points = document.querySelectorAll('.pointGroup');
 
     try {
-        const regex = new RegExp(value, 'i');
-        points.forEach(point => {
-            const name = point.dataset.name;
-            if (name && regex.test(name)) {
-                point.classList.add('visible');
-            } else {
+        if (value.length > 0) {
+            const regex = new RegExp(value, 'i');
+            points.forEach(point => {
+                const name = point.dataset.name;
+                if (name && regex.test(name)) {
+                    point.classList.add('visible');
+                } else {
+                    point.classList.remove('visible');
+                }
+            });
+        } else {
+            points.forEach(point => {
                 point.classList.remove('visible');
-            }
-        });
+            });
+        }
     } catch (error) {
         // Ignore invalid regex
     }
