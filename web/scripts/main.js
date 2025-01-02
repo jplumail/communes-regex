@@ -12,6 +12,14 @@ async function init() {
 
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', handleSearch);
+
+    const mapPoints = map.querySelectorAll('g');
+    mapPoints.forEach(point => {
+        point.addEventListener('mouseenter', () => {
+            const parent = point.parentElement;
+            parent.appendChild(point);
+        });
+    });
 }
 
 function handleSearch(e) {
