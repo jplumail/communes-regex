@@ -37,8 +37,8 @@ a {
 
 .pointGroup {
     --radius: 2;
-    /* 3km */
     --display-label: none;
+    --stroke-width: 3px;
     display: none;
 }
 
@@ -55,9 +55,12 @@ a {
     fill: red;
     r: var(--radius);
     stroke: transparent;
-    /* Ajouter une zone tampon autour */
-    stroke-width: 2;
-    /* Largeur pour survol sans affecter le visuel */
+    stroke-width: var(--stroke-width);
+}
+
+.pointGroup:hover .point {
+    stroke: var(--background);
+    paint-order: stroke fill;
 }
 
 .label {
@@ -65,6 +68,9 @@ a {
     font-weight: bold;
     fill: var(--foreground);
     display: var(--display-label);
+    stroke: var(--background);
+    stroke-width: var(--stroke-width);
+    paint-order: stroke fill;
 }
 
 #map {
