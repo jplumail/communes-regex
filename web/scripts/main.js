@@ -5,7 +5,7 @@ import { dims, scale } from './utils.js';
 async function init() {
     const map = document.getElementById('map');
     map.setAttribute('viewBox', `0 0 ${(dims.maxX - dims.minX) * scale} ${(dims.maxY - dims.minY) * scale}`);
-    
+
     const franceHTML = await loadFrance();
     const villesHTML = await loadVilles();
     map.innerHTML = franceHTML + villesHTML;
@@ -17,23 +17,19 @@ async function init() {
 function handleSearch(e) {
     const value = e.target.value;
     const points = document.querySelectorAll('.pointGroup');
-    
-    if (value.length > 3) {
-        try {
-            const regex = new RegExp(value, 'i');
-            points.forEach(point => {
-                const name = point.dataset.name;
-                if (name && regex.test(name)) {
-                    point.classList.add('visible');
-                } else {
-                    point.classList.remove('visible');
-                }
-            });
-        } catch (error) {
-            // Ignore invalid regex
-        }
-    } else {
-        points.forEach(point => point.classList.remove('visible'));
+
+    try {
+        const regex = new RegExp(value, 'i');
+        points.forEach(point => {
+            const name = point.dataset.name;
+            if (name && regex.test(name)) {
+                point.classList.add('visible');
+            } else {
+                point.classList.remove('visible');
+            }
+        });
+    } catch (error) {
+        // Ignore invalid regex
     }
 }
 
