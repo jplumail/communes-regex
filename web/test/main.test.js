@@ -26,6 +26,8 @@ describe('main.js', () => {
         `;
     map = document.getElementById('map');
     searchInput = document.getElementById('searchInput');
+    vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
+    vi.spyOn(utils, 'scale', 'get').mockReturnValue(5)
   });
 
   afterEach(() => {
@@ -34,9 +36,6 @@ describe('main.js', () => {
   });
 
   it('should initialize the map with correct viewBox', async () => {
-    vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
-    vi.spyOn(utils, 'scale', 'get').mockReturnValue(5)
-
     await init();
 
     expect(map.getAttribute('viewBox')).toBe('0 0 500 500');
@@ -44,9 +43,6 @@ describe('main.js', () => {
 
 
   it('should load France and cities data', async () => {
-    vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
-    vi.spyOn(utils, 'scale', 'get').mockReturnValue(1)
-
     await init();
 
     expect(map.innerHTML).toContain('<polygon points="0,0 10,10"></polygon>');
@@ -55,8 +51,6 @@ describe('main.js', () => {
 
 
   it('should add event listeners', async () => {
-    vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
-    vi.spyOn(utils, 'scale', 'get').mockReturnValue(1)
     const mapSpy = vi.spyOn(map, 'querySelectorAll');
     mapSpy.mockReturnValue([
       { addEventListener: vi.fn(), parentElement: map }
