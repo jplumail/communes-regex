@@ -15,6 +15,13 @@
         </svg>
     </div>
     <script type="module" src="scripts/main.js"></script>
+    <script type="module">
+        import { init } from './scripts/main.js'; // Import init
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+        });
+    </script>    
 </body>
 
 </html>

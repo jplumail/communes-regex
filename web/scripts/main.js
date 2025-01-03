@@ -5,7 +5,7 @@ import franceData from '/data/regions_map.geojson?raw'
 import communesData from '/data/communes.geojson?raw'
 
 
-async function init() {
+export async function init() {
     const map = document.getElementById('map');
     map.setAttribute('viewBox', `0 0 ${(dims.maxX - dims.minX) * scale} ${(dims.maxY - dims.minY) * scale}`);
 
@@ -25,7 +25,7 @@ async function init() {
     });
 }
 
-function handleSearch(e) {
+export function handleSearch(e) {
     const value = e.target.value;
     const points = document.querySelectorAll('.pointGroup');
 
@@ -49,5 +49,3 @@ function handleSearch(e) {
         // Ignore invalid regex
     }
 }
-
-init();
