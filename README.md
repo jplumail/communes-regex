@@ -21,6 +21,7 @@ pnpm build
 
 ## Déploiement
 
+Firebase deploy is triggered on push:
 ```bash
-firebase deploy
+git push
 ```
