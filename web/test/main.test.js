@@ -10,6 +10,10 @@ vi.mock('../scripts/villes.js', () => ({
   loadVilles: vi.fn().mockResolvedValue('<g class="pointGroup" data-name="Testville"></g>'),
 }));
 
+vi.mock('../scripts/dropdown.js', () => ({
+  createDropdownList: vi.fn(), // Mock the function
+}));
+
 const mockDims = { minX: 0, minY: 0, maxX: 100, maxY: 100 };
 
 
@@ -20,8 +24,12 @@ describe('main.js', () => {
   beforeEach(() => {
     document.body.innerHTML = `
           <div id="app">
-            <input id="searchInput" type="text">
-            <svg id="map"></svg>
+              <div class="custom-dropdown">
+                  <input type="text" id="searchInput" placeholder="Entrez un regex">
+                  <ul id="dropdown-list"></ul>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="map">
+              </svg>
           </div>
         `;
     map = document.getElementById('map');
@@ -65,16 +73,14 @@ describe('main.js', () => {
 
 
   it('should filter cities based on search input', () => {
-    document.body.innerHTML = `
-            <div id="map">
-              <g class="pointGroup" data-name="Ville"></g>
-              <g class="pointGroup" data-name="Test"></g>
-            </div>
-            <input id="searchInput" type="text">
+    map.innerHTML = `
+            <g class="pointGroup" data-name="Ville"></g>
+            <g class="pointGroup" data-name="Test"></g>
         `;
 
     handleSearch({ target: { value: 'ville' } });
     const points = document.querySelectorAll('.pointGroup');
+    console.log(map.children)
     expect(points[0].classList.contains('visible')).toBe(true);
     expect(points[1].classList.contains('visible')).toBe(false);
 

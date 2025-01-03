@@ -1,6 +1,7 @@
 import { loadFrance } from './france.js';
 import { loadVilles } from './villes.js';
 import { dims, scale } from './utils.js';
+import { createDropdownList } from './dropdown.js';
 import franceData from '/data/regions_map.geojson?raw'
 import communesData from '/data/communes.geojson?raw'
 
@@ -23,6 +24,8 @@ export async function init() {
             parent.appendChild(point);
         });
     });
+
+    createDropdownList();
 }
 
 export function handleSearch(e) {
