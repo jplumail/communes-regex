@@ -18,7 +18,7 @@ jobs:
         with:
           version: 9
       - run: pnpm install
-      - run: pnpm run ci  # Add this line
+      - run: pnpm test  # Add this line
       - run: pnpm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
