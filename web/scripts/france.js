@@ -1,7 +1,6 @@
 import { lambert93ToViewBox } from './utils.js';
-import franceData from '/data/regions_map.geojson?raw'
 
-export async function loadFrance() {
+export async function loadFrance(franceData) {
     const data = JSON.parse(franceData);
     
     return data.features.map((feature, index) => {
