@@ -1,13 +1,14 @@
 import { loadFrance } from './france.js';
 import { loadVilles } from './villes.js';
 import { dims, scale } from './utils.js';
+import communesData from '/data/communes.geojson?raw'
 
 async function init() {
     const map = document.getElementById('map');
     map.setAttribute('viewBox', `0 0 ${(dims.maxX - dims.minX) * scale} ${(dims.maxY - dims.minY) * scale}`);
 
     const franceHTML = await loadFrance();
-    const villesHTML = await loadVilles();
+    const villesHTML = await loadVilles(communesData);
     map.innerHTML = franceHTML + villesHTML;
 
     const searchInput = document.getElementById('searchInput');

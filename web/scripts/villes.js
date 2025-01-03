@@ -1,11 +1,10 @@
 import { lambert93ToViewBox } from './utils.js';
-import communesData from '/data/communes.geojson?raw'
 
-export async function loadVilles() {
+export async function loadVilles(communesData) {
     const data = JSON.parse(communesData);
     
     return data.features.map(feature => {
-        if (feature.geometry.type === "Point" && feature.properties) {
+        if (feature.properties && feature.geometry && feature.geometry.type === "Point") {
             const [x, y] = lambert93ToViewBox(feature.geometry.coordinates);
             return `
                 <g id="pointGroup-${feature.properties.ID}" class="pointGroup" data-name="${feature.properties.NOM}">
