@@ -67,7 +67,7 @@ describe('main.js', () => {
   it('should filter cities based on search input', () => {
     document.body.innerHTML = `
             <div id="map">
-              <g class="pointGroup visible" data-name="Ville"></g>
+              <g class="pointGroup" data-name="Ville"></g>
               <g class="pointGroup" data-name="Test"></g>
             </div>
             <input id="searchInput" type="text">
