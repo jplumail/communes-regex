@@ -44,6 +44,15 @@ describe('loadVilles', () => {
         })
     });
 
+    it('should append element to end of group on mouseenter', () => {
+        return loadVilles(mockGeoJson).then(svg => {
+            const pointGroup = svg.querySelector('#pointGroup-123');
+            const spy = vi.spyOn(svg, 'appendChild');
+            pointGroup.dispatchEvent(new MouseEvent('mouseenter'));
+            expect(spy).toHaveBeenCalledWith(pointGroup);
+        })
+    })
+
     it('should skip features without properties', () => {
         return loadVilles(mockGeoJson).then(svg => {
             expect(svg.innerHTML).not.toContain('pointGroup-undefined');
