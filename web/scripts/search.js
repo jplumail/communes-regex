@@ -25,24 +25,33 @@ export function createDropdownList(points) {
             });
             searchInput.dispatchEvent(inputEvent);
         });
-        li.addEventListener('click', () => {
-            dropdownList.style.display = 'none'; // Hide after selection
-        })
+        li.addEventListener('click', toggleDropdown)
         dropdownList.appendChild(li);
     });
 
     // Show/Hide dropdown
-    dropdownButton.addEventListener('click', () => {
-        dropdown.classList.toggle('active');
-    });
+    dropdownButton.addEventListener('click', toggleDropdown);
 
     // Hide dropdown when clicking outside
     document.addEventListener('click', (event) => {
-        if (!event.composedPath().includes(dropdown)) {
-            dropdown.classList.toggle('active');
+        if (isDropdownActive() &&!event.composedPath().includes(dropdown)) {
+            toggleDropdown();
         }
     });
 
+}
+
+function isDropdownActive() {
+    const dropdown = document.getElementById('dropdown');
+    return dropdown.classList.contains('active');
+}
+
+function toggleDropdown() {
+    const dropdown = document.getElementById('dropdown');
+    const active = dropdown.classList.toggle('active');
+
+    const dropdownButton = dropdown.querySelector('button');
+    dropdownButton.ariaExpanded = active;
 }
 
 /**
