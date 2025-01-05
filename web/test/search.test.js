@@ -1,28 +1,20 @@
-import { createDropdownList } from '../scripts/dropdown.js';
+import { createDropdownList } from '../scripts/search.js';
+import { setupDOM } from './utils.js'
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 
 
+
 describe('createDropdownList', () => {
-    let searchInput;
-    let dropdownList;
+    let searchInput, dropdownList;
 
     beforeEach(() => {
-        // Set up DOM elements
-        searchInput = document.createElement('input');
-        searchInput.id = 'searchInput';
-        document.body.appendChild(searchInput);
-
-        dropdownList = document.createElement('ul');
-        dropdownList.id = 'dropdown-list';
-        document.body.appendChild(dropdownList);
-
+        setupDOM();
         createDropdownList();
+        searchInput = document.getElementById('dropdown').querySelector('input');
+        dropdownList = document.getElementById('dropdown').querySelector('ul');
     });
 
     afterEach(() => {
-        // Clean up DOM elements
-        document.body.removeChild(searchInput);
-        document.body.removeChild(dropdownList);
     });
 
 

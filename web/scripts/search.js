@@ -1,8 +1,15 @@
 const regexExamples = ['ay$', 'cul', '^saint'];
 
-export function createDropdownList() {
-    const searchInput = document.getElementById('searchInput');
-    const dropdownList = document.getElementById('dropdown-list');
+/**
+ * 
+ * @param {NodeListOf<SVGElement>} points 
+ */
+export function createDropdownList(points) {
+    const dropdown = document.getElementById('dropdown');
+    const searchInput = dropdown.querySelector('input');
+    const dropdownList = dropdown.querySelector('ul');
+
+    searchInput.addEventListener('input', (e) => handleSearch(e.target.value, points));
 
     // populate dropdownList
     regexExamples.forEach(opt => {
@@ -36,4 +43,31 @@ export function createDropdownList() {
     });
 
     dropdownList.style.display = 'none'; // Start hidden
+}
+
+/**
+ * 
+ * @param {string} value regex value
+ * @param {NodeListOf<SVGElement>} points 
+ */
+export function handleSearch(value, points) {
+    try {
+        if (value.length > 0) {
+            const regex = new RegExp(value, 'i');
+            points.forEach(point => {
+                const name = point.dataset.name;
+                if (name && regex.test(name)) {
+                    point.classList.add('visible');
+                } else {
+                    point.classList.remove('visible');
+                }
+            });
+        } else {
+            points.forEach(point => {
+                point.classList.remove('visible');
+            });
+        }
+    } catch (error) {
+        // Ignore invalid regex
+    }
 }
