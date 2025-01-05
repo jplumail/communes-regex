@@ -109,8 +109,6 @@ a {
 }
 
 #dropdown > ul {
-    display: none;
-
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -123,6 +121,10 @@ a {
     border-radius: 0.5rem;
     border: 1px solid var(--foreground);
     overflow: hidden;
+}
+
+#dropdown > ul {
+    display: none;
 }
 
 #dropdown.active > ul {
