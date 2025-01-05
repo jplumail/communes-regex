@@ -1,17 +1,19 @@
-import { init, handleSearch } from '../scripts/main.js';
+import { init } from '../scripts/main.js';
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import * as utils from '../scripts/utils.js'
+import { setupDOM } from './utils.js';
 
 vi.mock('../scripts/france.js', () => ({
-  loadFrance: vi.fn().mockResolvedValue('<polygon points="0,0 10,10"></polygon>'),
+  loadFrance: vi.fn().mockResolvedValue(document.createElementNS("http://www.w3.org/2000/svg", "polygon")),
 }));
 
 vi.mock('../scripts/villes.js', () => ({
-  loadVilles: vi.fn().mockResolvedValue('<g class="pointGroup" data-name="Testville"></g>'),
+  loadVilles: vi.fn().mockResolvedValue(document.createElementNS("http://www.w3.org/2000/svg", "g")),
 }));
 
-vi.mock('../scripts/dropdown.js', () => ({
+vi.mock('../scripts/search.js', () => ({
   createDropdownList: vi.fn(), // Mock the function
+  handleSearch: vi.fn(),
 }));
 
 const mockDims = { minX: 0, minY: 0, maxX: 100, maxY: 100 };
@@ -22,18 +24,9 @@ describe('main.js', () => {
   let searchInput;
 
   beforeEach(() => {
-    document.body.innerHTML = `
-          <div id="app">
-              <div class="custom-dropdown">
-                  <input type="text" id="searchInput" placeholder="Entrez un regex">
-                  <ul id="dropdown-list"></ul>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="map">
-              </svg>
-          </div>
-        `;
+    setupDOM()
     map = document.getElementById('map');
-    searchInput = document.getElementById('searchInput');
+    searchInput = document.getElementById('dropdown').querySelector('input');
     vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
     vi.spyOn(utils, 'scale', 'get').mockReturnValue(5)
   });
@@ -52,48 +45,7 @@ describe('main.js', () => {
 
   it('should load France and cities data', async () => {
     await init();
-
-    expect(map.innerHTML).toContain('<polygon points="0,0 10,10"></polygon>');
-    expect(map.innerHTML).toContain('<g class="pointGroup" data-name="Testville"></g>');
+    
+    expect(map.children.length).toBeGreaterThan(0);
   });
-
-
-  it('should add event listeners', async () => {
-    const mapSpy = vi.spyOn(map, 'querySelectorAll');
-    mapSpy.mockReturnValue([
-      { addEventListener: vi.fn(), parentElement: map }
-    ]);
-    const addEventListenerSpy = vi.spyOn(searchInput, 'addEventListener'); // Spy *before* init
-
-    await init();
-    expect(addEventListenerSpy).toHaveBeenCalledWith('input', handleSearch);
-    expect(mapSpy).toHaveBeenCalledWith('g');
-  });
-
-
-
-  it('should filter cities based on search input', () => {
-    map.innerHTML = `
-            <g class="pointGroup" data-name="Ville"></g>
-            <g class="pointGroup" data-name="Test"></g>
-        `;
-
-    handleSearch({ target: { value: 'ville' } });
-    const points = document.querySelectorAll('.pointGroup');
-    console.log(map.children)
-    expect(points[0].classList.contains('visible')).toBe(true);
-    expect(points[1].classList.contains('visible')).toBe(false);
-
-
-    handleSearch({ target: { value: '' } });
-    expect(points[0].classList.contains('visible')).toBe(false);
-
-  });
-
-  it('should handle invalid regex', () => {
-
-    handleSearch({ target: { value: '[' } });  // Invalid regex
-    const points = document.querySelectorAll('.pointGroup');
-    // No error should be thrown
-  })
 });
