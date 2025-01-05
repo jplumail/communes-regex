@@ -45,30 +45,56 @@ a {
     margin: 1rem
 }
 
-#app svg {
-    max-height: 90vh;
-    max-width: 100%;
-    margin-top: 1rem;
-}
-
 #dropdown {
     width: 8rem;
     position: relative;
     font-size: 1rem;
 }
 
-#dropdown input {
+.input-group {
     width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
     padding: 0.5rem;
     border: 1px solid var(--foreground);
     border-radius: 0.5rem;
 }
 
-#dropdown input:focus {
+.input-group input {
+    width: 100%;
+    border: none;
+}
+
+.input-group input:focus {
     outline: none;
 }
 
-#dropdown ul {
+.toggle {
+    --_dim: 0.6rem;
+    right: 0.5rem;
+    height: var(--_dim);
+    width: var(--_dim);
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+.toggle svg {
+    display: block;
+}
+
+.toggle.closed {
+    transform: rotate(0deg);
+}
+
+.toggle.opened {
+    transform: rotate(180deg);
+}
+
+#dropdown > ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -81,6 +107,24 @@ a {
     border-radius: 0.5rem;
     border: 1px solid var(--foreground);
     overflow: hidden; /* Add this line */
+}
+
+#dropdown > ul {
+    display: none;
+}
+
+#dropdown.active > ul {
+    display: block;
+}
+
+#dropdown .input-group .toggle {
+    transform: rotate(0deg);
+    transition: ease 0.3s;
+}
+
+#dropdown.active .input-group .toggle {
+    transform: rotate(180deg);
+    transition: ease 0.3s;
 }
 
 #dropdown li {
@@ -139,6 +183,9 @@ a {
 
 #map {
     overflow: visible;
+    max-height: 90vh;
+    max-width: 100%;
+    margin-top: 1rem;
 }
 
 #map polygon {

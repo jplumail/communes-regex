@@ -8,6 +8,7 @@ export function createDropdownList(points) {
     const dropdown = document.getElementById('dropdown');
     const searchInput = dropdown.querySelector('input');
     const dropdownList = dropdown.querySelector('ul');
+    const dropdownButton = dropdown.querySelector('button');
 
     searchInput.addEventListener('input', (e) => handleSearch(e.target.value, points));
 
@@ -31,18 +32,17 @@ export function createDropdownList(points) {
     });
 
     // Show/Hide dropdown
-    searchInput.addEventListener('focus', () => {
-        dropdownList.style.display = 'block';
+    dropdownButton.addEventListener('click', () => {
+        dropdown.classList.toggle('active');
     });
 
     // Hide dropdown when clicking outside
     document.addEventListener('click', (event) => {
-        if (!event.composedPath().includes(searchInput) && !event.composedPath().includes(dropdownList)) {
-            dropdownList.style.display = 'none';
+        if (!event.composedPath().includes(dropdown)) {
+            dropdown.classList.toggle('active');
         }
     });
 
-    dropdownList.style.display = 'none'; // Start hidden
 }
 
 /**
