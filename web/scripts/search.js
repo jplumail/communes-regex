@@ -50,7 +50,7 @@ export function createDropdownList(points) {
  * @param {string} value regex value
  * @param {NodeListOf<SVGElement>} points 
  */
-export function handleSearch(value, points) {
+function handleSearch(value, points) {
     try {
         if (value.length > 0) {
             const regex = new RegExp(value, 'i');

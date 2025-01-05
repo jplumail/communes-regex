@@ -1,18 +1,47 @@
-import { createDropdownList, handleSearch } from '../scripts/search.js';
+import { createDropdownList } from '../scripts/search.js';
+import { createVille } from '../scripts/villes.js';
 import { setupDOM } from './utils.js'
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 
 
+vi.mock('../scripts/villes.js', () => ({
+    createVille: vi.fn((name) => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.dataset.name = name;
+        g.classList.add('pointGroup');
+        return g;
+    }),
+}));
+
+
 
 describe('createDropdownList', () => {
-    let searchInput, dropdownList, map;
+    /** @type {HTMLInputElement} */
+    let searchInput;
+
+    /** @type {HTMLUListElement} */
+    let dropdownList;
+    
+    /** @type {SVGElement} */
+    let map;
+
+    let villeA;
+    let villeB;
 
     beforeEach(() => {
         setupDOM();
-        createDropdownList();
         searchInput = document.getElementById('dropdown').querySelector('input');
         dropdownList = document.getElementById('dropdown').querySelector('ul');
         map = document.getElementById('map');
+        
+        // append 2 cities to map
+        villeA = createVille('ville a');
+        villeB = createVille('ville b');
+        map.appendChild(villeA);
+        map.appendChild(villeB);
+
+        const points = document.querySelectorAll('.pointGroup');
+        createDropdownList(points);
     });
 
     afterEach(() => {
@@ -27,13 +56,13 @@ describe('createDropdownList', () => {
     it('should update input value on mouseover', () => {
         const listItems = dropdownList.querySelectorAll('li');
         listItems[0].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe('ay$');
+        expect(searchInput.value).toBe(listItems[0].textContent);
 
         listItems[1].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe('cul');
+        expect(searchInput.value).toBe(listItems[1].textContent);
 
         listItems[2].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe('^saint');
+        expect(searchInput.value).toBe(listItems[2].textContent);
 
 
     });
@@ -74,26 +103,24 @@ describe('createDropdownList', () => {
     });
 
     it('should filter cities based on search input', () => {
-        const map = document.getElementById('map');
-        map.innerHTML = `
-            <g class="pointGroup" data-name="Ville a"></g>
-            <g class="pointGroup" data-name="Ville b"></g>
-        `;
-        
-        handleSearch('a', map.querySelectorAll('.pointGroup'));
-        const points = document.querySelectorAll('.pointGroup');
-        expect(points[0].classList.contains('visible')).toBe(points[0].dataset.name.includes('a'));
-        expect(points[1].classList.contains('visible')).toBe(points[1].dataset.name.includes('a'));
+        searchInput.dispatchEvent(new Event('focus'));
+        searchInput.value = 'a';
+        searchInput.dispatchEvent(new Event('input'));
+
+        expect(villeA.classList.contains('visible')).toBe(true);
+        expect(villeB.classList.contains('visible')).toBe(false);
 
 
-        handleSearch('', map.querySelectorAll('.pointGroup'));
-        expect(points[0].classList.contains('visible')).toBe(false);
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+        expect(villeA.classList.contains('visible')).toBe(false);
+        expect(villeB.classList.contains('visible')).toBe(false);
 
     });
 
     it('should handle invalid regex', () => {
 
-        handleSearch({ target: { value: '[' } });  // Invalid regex
+        searchInput.value = '[a'  // Invalid regex
         const points = document.querySelectorAll('.pointGroup');
         // No error should be thrown
     })
