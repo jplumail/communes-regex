@@ -46,7 +46,7 @@ a {
 }
 
 #dropdown {
-    width: 8rem;
+    width: 10rem;
     position: relative;
     font-size: 1rem;
 }
@@ -64,7 +64,8 @@ a {
 }
 
 .input-group input {
-    width: 100%;
+    width: 90%;
+    margin-right: 0.5rem;
     border: none;
 }
 
@@ -73,8 +74,8 @@ a {
 }
 
 .toggle {
-    --_dim: 0.6rem;
-    right: 0.5rem;
+    position: relative;
+    --_dim: 0.7rem;
     height: var(--_dim);
     width: var(--_dim);
     border: none;
@@ -82,8 +83,19 @@ a {
     cursor: pointer;
   }
 
+/** for accessibility, more clickable area */
+.toggle::before {
+    content: "";
+    position: absolute;
+    top: -0.5rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: -0.5rem;
+}
+
 .toggle svg {
     display: block;
+    fill: var(--foreground)
 }
 
 .toggle.closed {
