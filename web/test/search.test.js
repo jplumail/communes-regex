@@ -1,17 +1,18 @@
-import { createDropdownList } from '../scripts/search.js';
+import { createDropdownList, handleSearch } from '../scripts/search.js';
 import { setupDOM } from './utils.js'
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 
 
 
 describe('createDropdownList', () => {
-    let searchInput, dropdownList;
+    let searchInput, dropdownList, map;
 
     beforeEach(() => {
         setupDOM();
         createDropdownList();
         searchInput = document.getElementById('dropdown').querySelector('input');
         dropdownList = document.getElementById('dropdown').querySelector('ul');
+        map = document.getElementById('map');
     });
 
     afterEach(() => {
@@ -44,7 +45,7 @@ describe('createDropdownList', () => {
         expect(spy).toHaveBeenCalledWith(expect.any(Event));
         expect(spy.mock.calls[0][0].type).toBe('input');
         vi.restoreAllMocks();
-        
+
     });
 
     it('should show dropdown on input focus', () => {
@@ -71,5 +72,30 @@ describe('createDropdownList', () => {
         listItem.dispatchEvent(new MouseEvent('click'));
         expect(dropdownList.style.display).toBe('none');
     });
+
+    it('should filter cities based on search input', () => {
+        const map = document.getElementById('map');
+        map.innerHTML = `
+            <g class="pointGroup" data-name="Ville a"></g>
+            <g class="pointGroup" data-name="Ville b"></g>
+        `;
+        
+        handleSearch('a', map.querySelectorAll('.pointGroup'));
+        const points = document.querySelectorAll('.pointGroup');
+        expect(points[0].classList.contains('visible')).toBe(points[0].dataset.name.includes('a'));
+        expect(points[1].classList.contains('visible')).toBe(points[1].dataset.name.includes('a'));
+
+
+        handleSearch('', map.querySelectorAll('.pointGroup'));
+        expect(points[0].classList.contains('visible')).toBe(false);
+
+    });
+
+    it('should handle invalid regex', () => {
+
+        handleSearch({ target: { value: '[' } });  // Invalid regex
+        const points = document.querySelectorAll('.pointGroup');
+        // No error should be thrown
+    })
 });
 
