@@ -119,9 +119,8 @@ describe('createDropdownList', () => {
     });
 
     it('should handle invalid regex', () => {
-
         searchInput.value = '[a'  // Invalid regex
-        const points = document.querySelectorAll('.pointGroup');
+        searchInput.dispatchEvent(new Event('input'));
         // No error should be thrown
     })
 });
