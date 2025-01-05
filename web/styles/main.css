@@ -124,11 +124,14 @@ a {
 }
 
 #dropdown > ul {
-    display: none;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 #dropdown.active > ul {
-    display: block;
+    transition: opacity 0.3s ease;
+    opacity: 1;
 }
 
 #dropdown .input-group .toggle {
