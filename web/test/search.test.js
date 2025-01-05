@@ -16,6 +16,9 @@ vi.mock('../scripts/villes.js', () => ({
 
 
 describe('createDropdownList', () => {
+    /** @type {HTMLDivElement} */
+    let dropdown;
+
     /** @type {HTMLInputElement} */
     let searchInput;
 
@@ -25,13 +28,18 @@ describe('createDropdownList', () => {
     /** @type {SVGElement} */
     let map;
 
+    /** @type {HTMLButtonElement} */
+    let button;
+
     let villeA;
     let villeB;
 
     beforeEach(() => {
         setupDOM();
-        searchInput = document.getElementById('dropdown').querySelector('input');
-        dropdownList = document.getElementById('dropdown').querySelector('ul');
+        dropdown = document.getElementById('dropdown');
+        searchInput = dropdown.querySelector('input');
+        dropdownList = dropdown.querySelector('ul');
+        button = dropdown.querySelector('button');
         map = document.getElementById('map');
         
         // append 2 cities to map
@@ -77,29 +85,23 @@ describe('createDropdownList', () => {
 
     });
 
-    it('should show dropdown on input focus', () => {
-        searchInput.dispatchEvent(new Event('focus'));
-        expect(dropdownList.style.display).toBe('block');
-    });
-
     it('should hide dropdown on click outside', () => {
-        searchInput.dispatchEvent(new Event('focus')); // Show it first
-        expect(dropdownList.style.display).toBe('block'); // Verify it's shown
-
+        button.dispatchEvent(new MouseEvent('click'));
+        expect(dropdown.classList.contains('active')).toBe(true);
 
         // Click outside the dropdown and input
         document.body.click();
-        expect(dropdownList.style.display).toBe('none');
+        expect(dropdown.classList.contains('active')).toBe(false);
     });
 
-    it('should not hide dropdown on click inside', () => {
-        searchInput.dispatchEvent(new Event('focus')); // Show it first
-        searchInput.dispatchEvent(new MouseEvent('click'));
-        expect(dropdownList.style.display).toBe('block');
+    it('should hide dropdown on item selection', () => {
+        // Show it first
+        button.dispatchEvent(new MouseEvent('click'));
+        expect(dropdown.classList.contains('active')).toBe(true);
 
         const listItem = dropdownList.querySelector('li');
         listItem.dispatchEvent(new MouseEvent('click'));
-        expect(dropdownList.style.display).toBe('none');
+        expect(dropdown.classList.contains('active')).toBe(false);
     });
 
     it('should filter cities based on search input', () => {
