@@ -31,8 +31,7 @@ export async function loadVilles(communesData) {
             g.appendChild(text);
 
             g.addEventListener('mouseenter', () => {
-                const parent = g.parentElement;
-                parent.appendChild(g);
+                villes_group.appendChild(g);
             });
 
             villes_group.appendChild(g);
