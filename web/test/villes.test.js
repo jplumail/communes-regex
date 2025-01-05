@@ -1,6 +1,5 @@
 import { loadVilles } from '../scripts/villes.js'
 import { expect, describe, it, vi } from 'vitest'
-import { lambert93ToViewBox } from '../scripts/utils.js';
 
 
 const mockGeoJson = {
@@ -32,37 +31,40 @@ const mockGeoJson = {
 
 
 describe('loadVilles', () => {
-    it('should generate SVG elements for valid point features', async () => {
+    it('should generate SVG elements for valid point features', () => {
 
         vi.mock('../scripts/utils.js', () => ({
             lambert93ToViewBox: vi.fn().mockReturnValue([10, 20])
         }))
-        const svg = await loadVilles(JSON.stringify(mockGeoJson));
+        return loadVilles(mockGeoJson).then(svg => {
 
-        expect(svg).toContain('<g id="pointGroup-123" class="pointGroup" data-name="Testville">');
-        expect(svg).toContain('<circle class="point" cx="10" cy="20"/>');
-        expect(svg).toContain('<text class="label" x="20" y="20">Testville</text>');
+            expect(svg.innerHTML).toContain('<g id="pointGroup-123" class="pointGroup" data-name="Testville">');
+            expect(svg.innerHTML).toContain('<circle class="point" cx="10" cy="20"></circle>');
+            expect(svg.innerHTML).toContain('<text class="label" x="20" y="20">Testville</text>');
+        })
     });
 
-    it('should skip features without properties', async () => {
-        const svg = await loadVilles(JSON.stringify(mockGeoJson));
-        expect(svg).not.toContain('pointGroup-undefined');
+    it('should skip features without properties', () => {
+        return loadVilles(mockGeoJson).then(svg => {
+            expect(svg.innerHTML).not.toContain('pointGroup-undefined');
+        })
     });
 
 
-    it('should skip features with non-Point geometry', async () => {
-        const svg = await loadVilles(JSON.stringify(mockGeoJson));
-        expect(svg).not.toContain('pointGroup-456');
+    it('should skip features with non-Point geometry', () => {
+        return loadVilles(mockGeoJson).then(svg => {
+            expect(svg.innerHTML).not.toContain('pointGroup-456');
+        })
     });
 
-    it('should return an empty string if features is empty', async () => {
+    it('should return an empty string if features is empty', () => {
         const emptyGeoJson = { ...mockGeoJson, features: [] };
-        const svg = await loadVilles(JSON.stringify(emptyGeoJson));
-        expect(svg).toBe("");
+        return loadVilles(emptyGeoJson).then(svg => expect(svg.children.length).toBe(0));
     });
 
-    it('should handle null geometry', async () => {
-        const svg = await loadVilles(JSON.stringify(mockGeoJson));
-        expect(svg).not.toContain('pointGroup-789');
+    it('should handle null geometry', () => {
+        return loadVilles(mockGeoJson).then(svg => {
+            expect(svg.innerHTML).not.toContain('pointGroup-789');
+        })
     })
 });
