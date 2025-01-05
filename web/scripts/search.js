@@ -1,4 +1,16 @@
-const regexExamples = ['ay$', 'cul', '^saint'];
+// examples of regex to search for
+// they help the user to understand how to use regex
+const villesRegexExamples = [
+    { regex: '^Lyon$', description: "Exactement 'Lyon'" },
+    { regex: '^L..n$', description: "Commence par L, se termine par n et contient 4 lettres" },
+    { regex: 'yon$', description: "Se termine par 'ay'" },
+    { regex: '^Ly', description: "Commence par 'Ly'" },
+    { regex: '^.{3}$', description: "Ville de 3 lettres" },
+    { regex: 'y{2}', description: "Contient 2 y consécutifs" },
+    { regex: '^(le|la|les) \\w+ \\w+ \\w+$', description: "'le' ou 'la' ou 'les' suivi de 3 mots" },
+    { regex: '(a|e|i|o|u)\\1', description: "Comporte 2 voyelles identiques consécutives" },
+    { regex: '^a.*a$', description: "Commence et finit par la lettre a" },
+];
 
 /**
  * 
@@ -13,11 +25,22 @@ export function createDropdownList(points) {
     searchInput.addEventListener('input', (e) => handleSearch(e.target.value, points));
 
     // populate dropdownList
-    regexExamples.forEach(opt => {
+    villesRegexExamples.forEach(opt => {
         const li = document.createElement('li');
-        li.textContent = opt;
+        
+        const regexSpan = document.createElement('span');
+        regexSpan.textContent = opt.regex;
+        regexSpan.className = 'regex';
+        li.appendChild(regexSpan);
+
+        const descriptionSpan = document.createElement('span');
+        descriptionSpan.textContent = `${opt.description}`;
+        descriptionSpan.className = 'description';
+        descriptionSpan.title = opt.description; // Add this line
+        li.appendChild(descriptionSpan);
+
         li.addEventListener('mouseover', () => {
-            searchInput.value = opt;
+            searchInput.value = opt.regex;
 
             const inputEvent = new Event('input', {
                 bubbles: true, // Let the event bubble up the DOM
