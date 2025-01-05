@@ -37,6 +37,7 @@ export async function loadVilles(communesData) {
     villes_group.id = 'villes';
 
     communesData.features
+    // .filter((_, index) => index < 100)
     .forEach(feature => {
         if (feature.properties && feature.geometry && feature.geometry.type === 'Point') {
             const g = createVille(feature);
