@@ -8,7 +8,7 @@ import communesData from '/data/communes.geojson?raw';
 export async function init() {
     const map = setupMap()
 
-    loadMapData().then(([villes, france]) => {
+    await loadMapData().then(([villes, france]) => {
         map.appendChild(france);
         map.appendChild(villes);
     });
