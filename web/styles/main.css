@@ -184,7 +184,7 @@ a {
 }
 
 .pointGroup {
-    --radius: 2;
+    --radius: 2px;
     --display-label: none;
     --stroke-width: 3px;
     display: none;
@@ -195,7 +195,7 @@ a {
 }
 
 .pointGroup:hover {
-    --radius: 4;
+    --radius: 4px;
     --display-label: block;
 }
 
