@@ -24,48 +24,59 @@ export function createDropdownList(points) {
 
     searchInput.addEventListener('input', (e) => handleSearch(e.target.value, points));
 
-    // populate dropdownList
+    populateDropdownList(dropdownList, searchInput);
+    setupDropdownButton(dropdownButton, dropdown);
+    setupOutsideClickListener(dropdown);
+}
+
+function populateDropdownList(dropdownList, searchInput) {
     villesRegexExamples.forEach(opt => {
-        const li = document.createElement('li');
-        
-        const regexSpan = document.createElement('span');
-        regexSpan.textContent = opt.regex;
-        regexSpan.className = 'regex';
-        li.appendChild(regexSpan);
-
-        const descriptionSpan = document.createElement('span');
-        descriptionSpan.textContent = `${opt.description}`;
-        descriptionSpan.className = 'description';
-        descriptionSpan.title = opt.description; // Add this line
-        li.appendChild(descriptionSpan);
-
-        li.addEventListener('mouseover', () => {
-            searchInput.value = opt.regex;
-
-            const inputEvent = new Event('input', {
-                bubbles: true, // Let the event bubble up the DOM
-                cancelable: true // Allow event to be canceled
-            });
-            searchInput.dispatchEvent(inputEvent);
-        });
-        li.addEventListener('click', toggleDropdown)
+        const li = createDropdownItem(opt, searchInput);
         dropdownList.appendChild(li);
     });
+}
 
-    // Show/Hide dropdown
+function createDropdownItem(opt, searchInput) {
+    const li = document.createElement('li');
+    
+    const regexSpan = document.createElement('span');
+    regexSpan.textContent = opt.regex;
+    regexSpan.className = 'regex';
+    li.appendChild(regexSpan);
+
+    const descriptionSpan = document.createElement('span');
+    descriptionSpan.textContent = `${opt.description}`;
+    descriptionSpan.className = 'description';
+    descriptionSpan.title = opt.description;
+    li.appendChild(descriptionSpan);
+
+    li.addEventListener('mouseover', () => {
+        searchInput.value = opt.regex;
+
+        const inputEvent = new Event('input', {
+            bubbles: true,
+            cancelable: true
+        });
+        searchInput.dispatchEvent(inputEvent);
+    });
+    li.addEventListener('click', toggleDropdown);
+
+    return li;
+}
+
+function setupDropdownButton(dropdownButton, dropdown) {
     dropdownButton.addEventListener('click', toggleDropdown);
+}
 
-    // Hide dropdown when clicking outside
+function setupOutsideClickListener(dropdown) {
     document.addEventListener('click', (event) => {
-        if (isDropdownActive() &&!event.composedPath().includes(dropdown)) {
+        if (isDropdownActive(dropdown) && !event.composedPath().includes(dropdown)) {
             toggleDropdown();
         }
     });
-
 }
 
-function isDropdownActive() {
-    const dropdown = document.getElementById('dropdown');
+function isDropdownActive(dropdown) {
     return dropdown.classList.contains('active');
 }
 
