@@ -15,4 +15,13 @@ export async function init() {
     map.appendChild(villes);
 
     createDropdownList(villes.childNodes);
+    
+    detectFirefox();
+}
+
+function detectFirefox() {
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    if (isFirefox) {
+        alert("Attention : ce site pourrait ne pas fonctionner correctement sur Firefox. Testé sur Chrome et Safari.");
+    }
 }
