@@ -69,6 +69,7 @@ a {
     width: 90%;
     margin-right: 0.5rem;
     border: none;
+    background: none;
 }
 
 .input-group input:focus {
