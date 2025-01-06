@@ -7,8 +7,11 @@ import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 vi.mock('../scripts/villes.js', () => ({
     createVille: vi.fn((name) => {
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.dataset.name = name;
         g.classList.add('pointGroup');
+        g.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'circle'));
+        g.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'text'));
+        g.querySelector('text').textContent = name;
+        g.querySelector('text').classList.add('label');
         return g;
     }),
 }));

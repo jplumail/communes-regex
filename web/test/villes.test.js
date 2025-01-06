@@ -38,7 +38,7 @@ describe('loadVilles', () => {
         }))
         return loadVilles(mockGeoJson).then(svg => {
 
-            expect(svg.innerHTML).toContain('<g id="pointGroup-123" class="pointGroup" data-name="Testville">');
+            expect(svg.innerHTML).toContain('<g id="pointGroup-123" class="pointGroup">');
             expect(svg.innerHTML).toContain('<circle class="point" cx="10" cy="20"></circle>');
             expect(svg.innerHTML).toContain('<text class="label" x="20" y="20">Testville</text>');
         })

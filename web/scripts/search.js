@@ -121,7 +121,7 @@ function handleSearch(value, points) {
         if (value.length > 0) {
             const regex = new RegExp(value, 'i');
             points.forEach(point => {
-                const name = point.dataset.name;
+                const name = point.querySelector('.label').textContent;
                 if (name && regex.test(name)) {
                     point.classList.add('visible');
                 } else {

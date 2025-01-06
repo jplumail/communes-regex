@@ -22,7 +22,6 @@ const createVille = (feature) => {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.id = `pointGroup-${feature.properties.ID}`;
     g.classList.add('pointGroup');
-    g.dataset.name = feature.properties.NOM;
 
     g.appendChild(createCircle(x, y));
     g.appendChild(createText(x, y, feature.properties.NOM));
