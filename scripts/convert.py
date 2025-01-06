@@ -6,7 +6,7 @@
 import geopandas as gpd
 
 data_dir = "data"
-target_dir = "src/data"
+target_dir = "web/data"
 
 # Path to the shapefile
 region_shapefile_path = f'{data_dir}/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18/ADMIN-EXPRESS/1_DONNEES_LIVRAISON_2024-12-00244/ADE_3-2_SHP_LAMB93_FXX-ED2024-12-18/REGION.shp'
