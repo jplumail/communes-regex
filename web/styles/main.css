@@ -231,7 +231,7 @@ a {
 #map polygon {
     fill: var(--map-color);
     stroke: var(--foreground);
-    stroke-width: 2;
+    stroke-width: 0.5px;
 }
 
 @media screen and (min-width: 48rem) {
