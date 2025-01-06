@@ -120,5 +120,25 @@ describe('createDropdownList', () => {
         searchInput.dispatchEvent(new Event('input'));
         // No error should be thrown
     })
-});
 
+    it('should update URL with search input value', () => {
+        const testValue = '(le|la|les) \\w+ test';
+
+        searchInput.value = testValue;
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        const urlParams = new URLSearchParams(window.location.search);
+        expect(urlParams.get('regex')).toBe(testValue);
+    });
+
+    it('should initialize search input from URL', () => {
+        const testValue = '(le|la|les) \\w+ test';
+        const url = new URL(window.location);
+        url.searchParams.set('regex', testValue);
+        window.history.replaceState({}, '', url);
+
+        createDropdownList(document.querySelectorAll('.pointGroup'));
+        const searchInput = document.querySelector('#dropdown input');
+        expect(searchInput.value).toBe(testValue);
+    });
+});

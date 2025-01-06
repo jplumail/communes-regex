@@ -22,11 +22,15 @@ export function createDropdownList(points) {
     const dropdownList = dropdown.querySelector('ul');
     const dropdownButton = dropdown.querySelector('button');
 
-    searchInput.addEventListener('input', (e) => handleSearch(e.target.value, points));
+    searchInput.addEventListener('input', (e) => {
+        handleSearch(e.target.value, points);
+        updateURL(e.target.value);
+    });
 
     populateDropdownList(dropdownList, searchInput);
     setupDropdownButton(dropdownButton, dropdown);
     setupOutsideClickListener(dropdown);
+    initializeSearch();
 }
 
 function populateDropdownList(dropdownList, searchInput) {
@@ -51,17 +55,21 @@ function createDropdownItem(opt, searchInput) {
     li.appendChild(descriptionSpan);
 
     li.addEventListener('mouseover', () => {
-        searchInput.value = opt.regex;
-
-        const inputEvent = new Event('input', {
-            bubbles: true,
-            cancelable: true
-        });
-        searchInput.dispatchEvent(inputEvent);
+        searchInputValue(opt.regex);
     });
     li.addEventListener('click', toggleDropdown);
 
     return li;
+}
+
+function searchInputValue(value) {
+    const searchInput = document.querySelector('input');
+    searchInput.value = value;
+    const inputEvent = new Event('input', {
+        bubbles: true,
+        cancelable: true
+    });
+    searchInput.dispatchEvent(inputEvent);
 }
 
 function setupDropdownButton(dropdownButton, dropdown) {
@@ -86,6 +94,21 @@ function toggleDropdown() {
 
     const dropdownButton = dropdown.querySelector('button');
     dropdownButton.ariaExpanded = active;
+}
+
+function updateURL(value) {
+    const url = new URL(window.location);
+    url.searchParams.set('regex', value);
+    window.history.replaceState({}, '', url);
+}
+
+function initializeSearch() {
+    // Initialize search input from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const regexParam = urlParams.get('regex');
+    if (regexParam) {
+        searchInputValue(regexParam);
+    }
 }
 
 /**
