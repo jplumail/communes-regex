@@ -241,22 +241,24 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    padding: 10px;
+    padding: 0.5em;
     text-align: center;
     background-color: transparent;
     display: flex;
     justify-content: center;
+    color: var(--foreground-light);
+    font-size: small;
 }
 
 footer > * {
-    margin: auto 0.5rem;
+    margin: auto 0.2em;
 }
 
 
 footer a {
     text-decoration: none;
-    height: 1.6rem;
-    padding: 0.2rem;
+    height: 1.6em;
+    padding: 0.2em;
     border-radius: 4px;
     transition: color 0.2s;
 }
