@@ -2,6 +2,7 @@
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 9%);
     --foreground-light: hsl(0, 0%, 9%, 0.5);
+    --foreground-lighter: hsl(0, 0%, 9%, 0.2);
     --map-color: hsl(231, 52%, 38%);
 }
 
@@ -10,6 +11,7 @@
         --background: hsl(0, 0%, 4%);
         --foreground: hsl(0, 0%, 93%);
         --foreground-light: hsl(0, 0%, 93%, 0.5);
+        --foreground-lighter: hsl(0, 0%, 93%, 0.2);
         --map-color: hsl(231, 52%, 68%);
     }
 }
@@ -232,6 +234,39 @@ a {
     fill: var(--map-color);
     stroke: var(--foreground);
     stroke-width: 0.5px;
+}
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+}
+
+footer > * {
+    margin: auto 0.5rem;
+}
+
+
+footer a {
+    text-decoration: none;
+    height: 1.6rem;
+    padding: 0.2rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+footer a:hover {
+    background-color: var(--foreground-lighter);
+}
+
+footer a svg {
+    height: 100%;
 }
 
 @media screen and (min-width: 48rem) {
