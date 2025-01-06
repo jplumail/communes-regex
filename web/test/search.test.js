@@ -1,4 +1,4 @@
-import { createDropdownList } from '../scripts/search.js';
+import { createDropdownList, villesRegexExamples } from '../scripts/search.js';
 import { createVille } from '../scripts/villes.js';
 import { setupDOM } from './utils.js'
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
@@ -58,21 +58,16 @@ describe('createDropdownList', () => {
 
     it('should create list items for each example', () => {
         const listItems = dropdownList.querySelectorAll('li');
-        expect(listItems.length).toBe(3); // Based on the regexExamples array
+        expect(listItems.length).toBe(villesRegexExamples.length); // Based on the regexExamples array
     });
 
     it('should update input value on mouseover', () => {
         const listItems = dropdownList.querySelectorAll('li');
-        listItems[0].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe(listItems[0].textContent);
 
-        listItems[1].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe(listItems[1].textContent);
-
-        listItems[2].dispatchEvent(new MouseEvent('mouseover'));
-        expect(searchInput.value).toBe(listItems[2].textContent);
-
-
+        listItems.forEach((li, i) => {
+            li.dispatchEvent(new MouseEvent('mouseover'));
+            expect(searchInput.value).toBe(li.querySelector('.regex').textContent);
+        });
     });
 
     it('should trigger input event on mouseover', () => {

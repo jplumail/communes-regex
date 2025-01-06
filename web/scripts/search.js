@@ -1,6 +1,6 @@
 // examples of regex to search for
 // they help the user to understand how to use regex
-const villesRegexExamples = [
+export const villesRegexExamples = [
     { regex: '^Lyon$', description: "Exactement 'Lyon'" },
     { regex: '^L..n$', description: "Commence par L, se termine par n et contient 4 lettres" },
     { regex: 'yon$', description: "Se termine par 'ay'" },
