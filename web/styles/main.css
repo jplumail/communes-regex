@@ -109,29 +109,27 @@ a {
 }
 
 #dropdown > ul {
+    display: block;
     list-style-type: none;
     padding: 0;
     margin: 0;
-    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     position: absolute;
     top: calc(100% + 0.5rem);
     width: 100%;
     border-radius: 0.5rem;
-    border: 1px solid var(--foreground);
     overflow: hidden;
-}
 
-#dropdown > ul {
-    display: block;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    max-height: 0;
+    border: 0px solid var(--foreground);
+    transition: max-height 0.3s, border-width 0.3s step-end;
 }
 
 #dropdown.active > ul {
-    transition: opacity 0.3s ease;
-    opacity: 1;
+    max-height: 20rem;
+    border-width: 1px;
+    transition: max-height 0.3s, border-width 0.3s step-start;
 }
 
 #dropdown .input-group .toggle {
