@@ -258,11 +258,11 @@ footer a {
     height: 1.6rem;
     padding: 0.2rem;
     border-radius: 4px;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 }
 
 footer a:hover {
-    background-color: var(--foreground-lighter);
+    color: var(--foreground);
 }
 
 footer a svg {
