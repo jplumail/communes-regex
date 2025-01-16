@@ -123,6 +123,7 @@ a {
     width: 100%;
     border-radius: 0.5rem;
     overflow: hidden;
+    z-index: 1;
 
     max-height: 0;
     border: 0px solid var(--foreground);
@@ -248,6 +249,7 @@ footer {
     justify-content: center;
     color: var(--foreground-light);
     font-size: small;
+    z-index: 0;
 }
 
 footer > * {
