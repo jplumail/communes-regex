@@ -1,6 +1,5 @@
 import { loadFrance } from '../scripts/france.js';
 import { expect, describe, it, vi } from 'vitest';
-import { lambert93ToViewBox } from '../scripts/utils.js';
 
 const mockGeoJson = {
     type: "FeatureCollection",

@@ -13,29 +13,28 @@ export const villesRegexExamples = [
 ];
 
 /**
- * 
- * @param {NodeListOf<SVGElement>} points 
+ * @param {NodeListOf<SVGElement>} communesSvg 
  */
-export function createDropdownList(points) {
+export function createDropdownList(communesSvg) {
     const dropdown = document.getElementById('dropdown');
     const searchInput = dropdown.querySelector('input');
     const dropdownList = dropdown.querySelector('ul');
     const dropdownButton = dropdown.querySelector('button');
 
     searchInput.addEventListener('input', (e) => {
-        handleSearch(e.target.value, points);
+        handleSearch(e.target.value, communesSvg);
         updateURL(e.target.value);
     });
 
-    populateDropdownList(dropdownList, searchInput);
+    populateDropdownList(dropdownList);
     setupDropdownButton(dropdownButton, dropdown);
     setupOutsideClickListener(dropdown);
     initializeSearch();
 }
 
-function populateDropdownList(dropdownList, searchInput) {
+function populateDropdownList(dropdownList) {
     villesRegexExamples.forEach(opt => {
-        const li = createDropdownItem(opt, searchInput);
+        const li = createDropdownItem(opt);
         dropdownList.appendChild(li);
     });
 }
@@ -114,13 +113,13 @@ function initializeSearch() {
 /**
  * 
  * @param {string} value regex value
- * @param {NodeListOf<SVGElement>} points 
+ * @param {NodeListOf<SVGElement>} communesSvg 
  */
-function handleSearch(value, points) {
+function handleSearch(value, communesSvg) {
     try {
         if (value.length > 0) {
             const regex = new RegExp(value, 'i');
-            points.forEach(point => {
+            communesSvg.forEach(point => {
                 const name = point.querySelector('.label').textContent;
                 if (name && regex.test(name)) {
                     point.classList.add('visible');
@@ -129,7 +128,7 @@ function handleSearch(value, points) {
                 }
             });
         } else {
-            points.forEach(point => {
+            communesSvg.forEach(point => {
                 point.classList.remove('visible');
             });
         }

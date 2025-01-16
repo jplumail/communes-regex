@@ -4,18 +4,18 @@ import { lambert93ToViewBox } from './utils.js';
  * @param {GeoJSON.FeatureCollection} franceData 
  */
 export async function loadFrance(franceData) {    
-    const france = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    france.id = 'france';
+    const svgFranceGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    svgFranceGroup.id = 'france';
     franceData.features.forEach((feature, _) => {
         if (feature.geometry.type === "Polygon") {
-            france.appendChild(createPolygon(feature.geometry));
+            svgFranceGroup.appendChild(createPolygon(feature.geometry));
         } else if (feature.geometry.type === "MultiPolygon") {
             feature.geometry.coordinates.forEach((polygon, _) => {
-                france.appendChild(createPolygon({ type: "Polygon", coordinates: polygon }));
+                svgFranceGroup.appendChild(createPolygon({ type: "Polygon", coordinates: polygon }));
             });
         }
     });
-    return france;
+    return svgFranceGroup;
 }
 
 /**
