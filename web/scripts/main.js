@@ -35,6 +35,9 @@ async function loadMapData() {
 function detectFirefox() {
     const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     if (isFirefox) {
-        alert("Attention : ce site pourrait ne pas fonctionner correctement sur Firefox. Testé sur Chrome et Safari.");
+        const warning = document.createElement('div');
+        warning.className = 'browser-warning';
+        warning.textContent = 'Note : Certaines fonctionnalités ne fonctionnent pas sur Firefox (comme le survol des villes). Site testé sur Chrome et Safari.';
+        document.body.append(warning);
     }
 }
