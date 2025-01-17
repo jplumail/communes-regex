@@ -17,7 +17,7 @@ const createText = (x, y, textContent) => {
     return text;
 }
 
-const createVille = (feature) => {
+export const createVille = (feature) => {
     const [x, y] = lambert93ToViewBox(feature.geometry.coordinates);
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.id = `pointGroup-${feature.properties.ID}`;

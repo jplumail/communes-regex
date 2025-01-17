@@ -2,8 +2,8 @@ import { loadFrance } from './france.js';
 import { loadVilles } from './villes.js';
 import { dims, scale } from './utils.js';
 import { createDropdownList } from './search.js';
-import franceData from '/data/regions_map.json';
-import communesData from '/data/communes.json';
+import franceData from '../data/regions_map.json';
+import communesData from '../data/communes.json';
 
 export async function init() {
     const map = setupMap()

@@ -16,7 +16,10 @@ vi.mock('../scripts/search.js', () => ({
   handleSearch: vi.fn(),
 }));
 
-const mockDims = { minX: 0, minY: 0, maxX: 100, maxY: 100 };
+vi.mock('../scripts/utils.js', () => ({
+  dims: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
+  scale: 5,
+}));
 
 
 describe('main.js', () => {
@@ -27,8 +30,6 @@ describe('main.js', () => {
     setupDOM()
     map = document.getElementById('map');
     searchInput = document.getElementById('dropdown').querySelector('input');
-    vi.spyOn(utils, 'dims', 'get').mockReturnValue(mockDims)
-    vi.spyOn(utils, 'scale', 'get').mockReturnValue(5)
   });
 
   afterEach(() => {
