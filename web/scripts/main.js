@@ -2,8 +2,8 @@ import { loadFrance } from './france.js';
 import { loadVilles } from './villes.js';
 import { dims, scale } from './utils.js';
 import { createDropdownList } from './search.js';
-import franceData from '/data/regions_map.geojson?raw';
-import communesData from '/data/communes.geojson?raw';
+import franceData from '/data/regions_map.json';
+import communesData from '/data/communes.json';
 
 export async function init() {
     const map = setupMap()
@@ -23,8 +23,8 @@ function setupMap() {
 }
 
 async function loadMapData() {
-    const promFrance = loadFrance(JSON.parse(franceData));
-    const promVilles = loadVilles(JSON.parse(communesData)).then(villes => {
+    const promFrance = loadFrance(franceData);
+    const promVilles = loadVilles(communesData).then(villes => {
         createDropdownList(villes.childNodes);
         return villes;
     });
