@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "postinstall": "pnpm exec playwright install",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"
