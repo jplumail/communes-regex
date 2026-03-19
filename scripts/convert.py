@@ -4,31 +4,41 @@
 # ///
 
 import geopandas as gpd
+from pathlib import Path
 
 data_dir = "data"
 target_dir = "web/data"
 
-# Path to the shapefile
-region_shapefile_path = f'{data_dir}/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18/ADMIN-EXPRESS/1_DONNEES_LIVRAISON_2024-12-00244/ADE_3-2_SHP_LAMB93_FXX-ED2024-12-18/REGION.shp'
+data_root = Path(data_dir)
+target_root = Path(target_dir)
 
-# Load the shapefile
-gdf = gpd.read_file(region_shapefile_path)
 
-# Simplify the geometry
-tolerance = 1_000  # meters
-gdf['geometry'] = gdf['geometry'].simplify(tolerance=tolerance, preserve_topology=True)
+def latest_path(pattern: str) -> Path | None:
+    matches = sorted(data_root.glob(pattern))
+    return matches[-1] if matches else None
 
-# Print the first few rows of the GeoDataFrame
-gdf.to_file(f'{target_dir}/regions_map.json', driver='GeoJSON')
 
-communes_shapefile_path = f'{data_dir}/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18/ADMIN-EXPRESS/1_DONNEES_LIVRAISON_2024-12-00244/ADE_3-2_SHP_LAMB93_FXX-ED2024-12-18/COMMUNE.shp'
-gdf = gpd.read_file(communes_shapefile_path, columns=["ID", "NOM", "NOM_M", "INSEE_COM", "STATUT", "POPULATION", "INSEE_CAN", "INSEE_ARR", "INSEE_DEP", "INSEE_REG", "SIREN_EPCI"])
+gpkg_path = latest_path("**/*.gpkg")
 
-# geometry from polygon to point (centroid)
-gdf['geometry'] = gdf['geometry'].centroid
+if gpkg_path is None:
+    raise FileNotFoundError(
+        "No extracted ADMIN-EXPRESS GeoPackage found in data/. "
+        "Run ./scripts/download.sh then ./scripts/extract.sh first."
+    )
 
-# keep only ID, NOM
-gdf = gdf[["ID", "NOM", "geometry"]]
+regions = gpd.read_file(gpkg_path, layer="region")
+regions["geometry"] = regions["geometry"].simplify(
+    tolerance=1_000,
+    preserve_topology=True,
+)
+regions.to_file(target_root / "regions_map.json", driver="GeoJSON")
 
-# To GeoJSON
-gdf.to_file(f'{target_dir}/communes.json', driver='GeoJSON')
+communes = gpd.read_file(
+    gpkg_path,
+    layer="commune",
+    columns=["cleabs", "nom_officiel"],
+)
+communes["geometry"] = communes["geometry"].centroid
+communes = communes.rename(columns={"cleabs": "ID", "nom_officiel": "NOM"})
+communes = communes[["ID", "NOM", "geometry"]]
+communes.to_file(target_root / "communes.json", driver="GeoJSON")

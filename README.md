@@ -13,8 +13,8 @@ pnpm dev
 ## Build
 
 ```bash
-./download.sh
-./extract.sh
+./scripts/download.sh
+./scripts/extract.sh
 uv run scripts/convert.py
 pnpm build
 ```

@@ -1,19 +1,27 @@
 #!/bin/sh
 
-url="https://data.geopf.fr/telechargement/download/ADMIN-EXPRESS/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18.7z"
+set -eu
+
+catalog_url="https://geoservices.ign.fr/telechargement-api/ADMIN-EXPRESS"
 output_dir="data"
-output_file="$output_dir/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-12-18.7z"
 
-# Créer le répertoire de sortie s'il n'existe pas
-if [ ! -d "$output_dir" ]; then
-    mkdir -p "$output_dir"
+mkdir -p "$output_dir"
+
+url="$(
+    curl -fsSL "$catalog_url" \
+    | rg -o 'https://data\.geopf\.fr/telechargement/download/ADMIN-EXPRESS/ADMIN-EXPRESS_[^"]+__GPKG_LAMB93_FXX_[0-9-]+/ADMIN-EXPRESS_[^"]+__GPKG_LAMB93_FXX_[0-9-]+\.7z' \
+    | sort -u \
+    | tail -n 1
+)"
+
+if [ -z "$url" ]; then
+    echo "Unable to find the latest ADMIN-EXPRESS FXX archive." >&2
+    exit 1
 fi
 
-# Télécharger le fichier
-curl -o "$output_file" "$url"
-if [ $? -eq 0 ]; then
-    echo "Download completed."
-else
-    echo "Error downloading the file."
-    rm -f "$output_file"
-fi
+output_file="$output_dir/$(basename "$url")"
+
+curl -fL "$url" -o "$output_file"
+7zz t -bso0 "$output_file" >/dev/null
+
+echo "Downloaded $output_file"
