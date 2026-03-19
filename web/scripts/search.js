@@ -97,7 +97,16 @@ function toggleDropdown() {
 
 function updateURL(value) {
     const url = new URL(window.location);
-    url.searchParams.set('regex', value);
+    const currentValue = url.searchParams.get('regex') ?? '';
+    if (currentValue === value) {
+        return;
+    }
+
+    if (value.length > 0) {
+        url.searchParams.set('regex', value);
+    } else {
+        url.searchParams.delete('regex');
+    }
     window.history.replaceState({}, '', url);
 }
 
