@@ -1,0 +1,101 @@
+name: Update IGN data
+
+on:
+  schedule:
+    - cron: '15 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-ign-data
+  cancel-in-progress: false
+
+jobs:
+  update_ign_data:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full ripgrep
+
+          if ! command -v 7zz >/dev/null 2>&1 && command -v 7z >/dev/null 2>&1; then
+            sudo ln -s "$(command -v 7z)" /usr/local/bin/7zz
+          fi
+
+      - name: Install JavaScript dependencies
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pnpm install --frozen-lockfile
+
+      - name: Download latest IGN archive
+        run: ./scripts/download.sh
+
+      - name: Extract IGN archive
+        run: ./scripts/extract.sh
+
+      - name: Convert IGN data
+        run: uv run scripts/convert.py
+
+      - name: Detect generated data changes
+        id: changes
+        run: |
+          if git diff --quiet -- web/data; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Playwright browsers
+        if: steps.changes.outputs.has_changes == 'true'
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run test suite
+        if: steps.changes.outputs.has_changes == 'true'
+        run: pnpm test
+
+      - name: Build application
+        if: steps.changes.outputs.has_changes == 'true'
+        run: pnpm build
+
+      - name: Commit updated data
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/data/communes.json web/data/regions_map.json
+          git commit -m "chore(data): update IGN Admin Express"
+          git push origin HEAD:"$TARGET_BRANCH"
+
+      - name: Deploy to Firebase Hosting
+        if: steps.changes.outputs.has_changes == 'true' && github.ref_name == 'main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COMMUNES_REGEX }}
+          channelId: live
+          projectId: communes-regex
