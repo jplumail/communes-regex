@@ -55,17 +55,50 @@ jobs:
       - name: Install JavaScript dependencies
         run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 pnpm install --frozen-lockfile
 
+      - name: Resolve latest IGN version
+        id: latest
+        run: sh ./scripts/latest_admin_express.sh github-output >> "$GITHUB_OUTPUT"
+
+      - name: Check if IGN update is needed
+        id: version_check
+        run: |
+          current_version=""
+
+          if [ -f web/data/admin-express-version.txt ]; then
+            current_version="$(tr -d '\n' < web/data/admin-express-version.txt)"
+          fi
+
+          echo "current_version=$current_version" >> "$GITHUB_OUTPUT"
+
+          if [ "$current_version" = "${{ steps.latest.outputs.latest_version }}" ]; then
+            echo "needs_update=false" >> "$GITHUB_OUTPUT"
+            echo "IGN version ${current_version:-<none>} is already committed."
+          else
+            echo "needs_update=true" >> "$GITHUB_OUTPUT"
+            echo "IGN version update needed: ${current_version:-<none>} -> ${{ steps.latest.outputs.latest_version }}"
+          fi
+
       - name: Download latest IGN archive
+        if: steps.version_check.outputs.needs_update == 'true'
+        env:
+          ADMIN_EXPRESS_URL: ${{ steps.latest.outputs.latest_url }}
         run: ./scripts/download.sh
 
       - name: Extract IGN archive
+        if: steps.version_check.outputs.needs_update == 'true'
         run: ./scripts/extract.sh
 
       - name: Convert IGN data
+        if: steps.version_check.outputs.needs_update == 'true'
         run: uv run scripts/convert.py
+
+      - name: Write IGN version metadata
+        if: steps.version_check.outputs.needs_update == 'true'
+        run: printf '%s\n' '${{ steps.latest.outputs.latest_version }}' > web/data/admin-express-version.txt
 
       - name: Detect generated data changes
         id: changes
+        if: steps.version_check.outputs.needs_update == 'true'
         run: |
           if [ -z "$(git status --short --untracked-files=all -- web/data)" ]; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -90,7 +123,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- web/data/communes.json web/data/regions_map.json
+          git add -A -- web/data/admin-express-version.txt web/data/communes.json web/data/regions_map.json
           git commit -m "chore(data): update IGN Admin Express"
           git push origin HEAD:"$TARGET_BRANCH"
 

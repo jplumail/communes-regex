@@ -34,6 +34,10 @@ via le workflow GitHub Actions `Update IGN data`.
 Le workflow peut aussi être lancé manuellement depuis l'onglet Actions de GitHub grâce à
 `workflow_dispatch`.
 
+Le workflow compare d'abord la version IGN distante avec la version commitée dans
+`web/data/admin-express-version.txt`. Si elles sont identiques, il s'arrête avant tout
+téléchargement.
+
 Lors d'un lancement manuel sur une branche secondaire, le workflow committe les fichiers
 mis à jour sur cette branche et ne déploie pas Firebase. Le déploiement automatique reste
 réservé à `main`.

@@ -2,22 +2,11 @@
 
 set -eu
 
-catalog_url="https://geoservices.ign.fr/telechargement-api/ADMIN-EXPRESS"
 output_dir="data"
 
 mkdir -p "$output_dir"
 
-url="$(
-    curl --retry 5 --retry-all-errors --retry-delay 5 --connect-timeout 30 -fsSL "$catalog_url" \
-    | rg -o 'https://data\.geopf\.fr/telechargement/download/ADMIN-EXPRESS/ADMIN-EXPRESS_[^"]+__GPKG_LAMB93_FXX_[0-9-]+/ADMIN-EXPRESS_[^"]+__GPKG_LAMB93_FXX_[0-9-]+\.7z' \
-    | sort -u \
-    | tail -n 1
-)"
-
-if [ -z "$url" ]; then
-    echo "Unable to find the latest ADMIN-EXPRESS FXX archive." >&2
-    exit 1
-fi
+url="${ADMIN_EXPRESS_URL:-$(sh ./scripts/latest_admin_express.sh url)}"
 
 output_file="$output_dir/$(basename "$url")"
 
