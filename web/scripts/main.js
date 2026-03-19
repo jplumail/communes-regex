@@ -12,8 +12,6 @@ export async function init() {
         map.appendChild(france);
         map.appendChild(villes);
     });
-
-    detectFirefox();
 }
 
 function setupMap() {
@@ -30,14 +28,4 @@ async function loadMapData() {
     });
 
     return Promise.all([promVilles, promFrance]);
-}
-
-function detectFirefox() {
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    if (isFirefox) {
-        const warning = document.createElement('div');
-        warning.className = 'browser-warning';
-        warning.textContent = 'Note : Certaines fonctionnalités ne fonctionnent pas sur Firefox (comme le survol des villes). Site testé sur Chrome et Safari.';
-        document.body.append(warning);
-    }
 }
