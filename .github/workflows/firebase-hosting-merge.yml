@@ -16,6 +16,7 @@ jobs:
         with:
           version: 9
       - run: pnpm install
+      - run: pnpm exec playwright install --with-deps
       - run: pnpm test  # Add this line
       - run: pnpm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
