@@ -23,7 +23,7 @@ export function setupDOM() {
     dropdown.appendChild(dropdownList);
     app.appendChild(dropdown);
 
-    const map = document.createElement('svg');
+    const map = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     map.id = 'map';
     app.appendChild(map);
 

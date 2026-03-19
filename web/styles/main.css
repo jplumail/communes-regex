@@ -188,7 +188,7 @@ a {
 
 .pointGroup {
     --radius: 2px;
-    --display-label: none;
+    --label-visibility: hidden;
     --stroke-width: 3px;
     display: none;
 }
@@ -197,9 +197,10 @@ a {
     display: block;
 }
 
+.pointGroup.hovered,
 .pointGroup:hover {
     --radius: 4px;
-    --display-label: block;
+    --label-visibility: visible;
 }
 
 .point {
@@ -209,6 +210,7 @@ a {
     stroke-width: var(--stroke-width);
 }
 
+.pointGroup.hovered .point,
 .pointGroup:hover .point {
     stroke: var(--background);
     paint-order: stroke fill;
@@ -218,7 +220,7 @@ a {
     font-size: 1rem;
     font-weight: bold;
     fill: var(--foreground);
-    display: var(--display-label);
+    visibility: var(--label-visibility);
     stroke: var(--background);
     stroke-width: var(--stroke-width);
     paint-order: stroke fill;

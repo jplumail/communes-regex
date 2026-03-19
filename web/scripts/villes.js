@@ -28,12 +28,28 @@ export const createVille = (feature) => {
     return g;
 }
 
+function setHoveredState(villesGroup, pointGroup, hovered) {
+    pointGroup.classList.toggle('hovered', hovered);
+
+    if (hovered) {
+        // Keep the hovered commune above the others without relying on SVG :hover persistence.
+        villesGroup.appendChild(pointGroup);
+    }
+}
+
+function clearHoveredState(pointGroup) {
+    if (pointGroup) {
+        pointGroup.classList.remove('hovered');
+    }
+}
+
 /**
  * @param {GeoJSON.FeatureCollection} communesData 
  */
 export async function loadVilles(communesData) {
     const villes_group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     villes_group.id = 'villes';
+    let activePointGroup = null;
 
     communesData.features
     // .filter((_, index) => index < 100)
@@ -42,11 +58,25 @@ export async function loadVilles(communesData) {
             const g = createVille(feature);
             villes_group.appendChild(g);
             g.addEventListener('mouseenter', () => {
-                // move the element to the last element of villes_group
-                villes_group.appendChild(g);
+                if (activePointGroup && activePointGroup !== g) {
+                    clearHoveredState(activePointGroup);
+                }
+                setHoveredState(villes_group, g, true);
+                activePointGroup = g;
+            });
+            g.addEventListener('mouseleave', () => {
+                setHoveredState(villes_group, g, false);
+                if (activePointGroup === g) {
+                    activePointGroup = null;
+                }
             });
         }
     })
+
+    villes_group.addEventListener('mouseleave', () => {
+        clearHoveredState(activePointGroup);
+        activePointGroup = null;
+    });
 
     return villes_group
 }
