@@ -1,6 +1,9 @@
 name: Update IGN data
 
 on:
+  push:
+    branches:
+      - codex/test-ign-update-workflow
   schedule:
     - cron: '15 5 * * 1'
   workflow_dispatch:
