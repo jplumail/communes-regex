@@ -11,6 +11,7 @@ target_dir = "web/data"
 
 data_root = Path(data_dir)
 target_root = Path(target_dir)
+target_root.mkdir(parents=True, exist_ok=True)
 
 
 def latest_path(pattern: str) -> Path | None:
