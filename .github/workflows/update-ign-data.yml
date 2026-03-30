@@ -43,7 +43,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y p7zip-full ripgrep
+          sudo apt-get install -y p7zip-full
 
           if ! command -v 7zz >/dev/null 2>&1 && command -v 7z >/dev/null 2>&1; then
             sudo ln -s "$(command -v 7z)" /usr/local/bin/7zz
