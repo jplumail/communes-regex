@@ -1,3 +1,10 @@
+## Specification Workflow
+
+Non-trivial changes in product behavior, data generation, or deployment are
+expected to start with a spec in `specs/[###-feature-name]/spec.md`, followed by
+an implementation plan and task list. Small housekeeping changes can stay
+lighter-weight when the scope and risk are obvious.
+
 ## Installation
 
 ```bash

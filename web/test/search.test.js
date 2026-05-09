@@ -3,6 +3,18 @@ import { createVille } from '../scripts/villes.js';
 import { setupDOM } from './utils.js'
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 
+const waitFrames = (count = 1) => new Promise(resolve => {
+    const step = () => {
+        count -= 1;
+        if (count <= 0) {
+            resolve();
+            return;
+        }
+        requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+});
+
 
 vi.mock('../scripts/villes.js', () => ({
     createVille: vi.fn((name) => {
@@ -143,5 +155,32 @@ describe('createDropdownList', () => {
         createDropdownList(document.querySelectorAll('.pointGroup'));
         const searchInput = document.querySelector('#dropdown input');
         expect(searchInput.value).toBe(testValue);
+    });
+
+    it('should recover the correct final state when a progressive render is interrupted', async () => {
+        setupDOM();
+        const dropdown = document.getElementById('dropdown');
+        const searchInput = dropdown.querySelector('input');
+        const map = document.getElementById('map');
+
+        for (let index = 0; index < 1200; index++) {
+            map.appendChild(createVille(`ville a ${index}`));
+        }
+        const finalMatch = createVille('zz final match');
+        map.appendChild(finalMatch);
+
+        createDropdownList(document.querySelectorAll('.pointGroup'));
+
+        searchInput.value = 'a';
+        searchInput.dispatchEvent(new Event('input'));
+
+        // Interrupt before all "a" matches have been progressively rendered.
+        searchInput.value = 'zz';
+        searchInput.dispatchEvent(new Event('input'));
+
+        await waitFrames(8);
+
+        const visibleCities = Array.from(document.querySelectorAll('.pointGroup.visible'));
+        expect(visibleCities).toEqual([finalMatch]);
     });
 });

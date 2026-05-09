@@ -8,6 +8,7 @@
     "postinstall": "pnpm exec playwright install",
     "build": "vite build",
     "preview": "vite preview",
+    "diagnose:search": "node scripts/diagnose-search-freeze.mjs",
     "test": "vitest"
   },
   "devDependencies": {

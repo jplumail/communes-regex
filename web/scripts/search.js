@@ -1,16 +1,7 @@
-// examples of regex to search for
-// they help the user to understand how to use regex
-export const villesRegexExamples = [
-    { regex: '^Rouen$', description: "Exactement 'Rouen'" },
-    { regex: '^R...n$', description: "Commence par R, se termine par n et contient 5 lettres" },
-    { regex: 'ouen$', description: "Se termine par 'ouen'" },
-    { regex: '^Rou', description: "Commence par 'Rou'" },
-    { regex: '^.{3}$', description: "Ville de 3 lettres" },
-    { regex: 'y{2}', description: "Contient 2 y consécutifs" },
-    { regex: '^(le|la|les) \\w+ \\w+ \\w+$', description: "'le' ou 'la' ou 'les' suivi de 3 mots" },
-    { regex: '(a|e|i|o|u)\\1', description: "Comporte 2 voyelles identiques consécutives" },
-    { regex: '^a.*a$', description: "Commence et finit par la lettre a" },
-];
+import { createProgressiveSearchRenderer } from './progressive-search-renderer.js';
+import { villesRegexExamples } from './search-examples.js';
+
+export { villesRegexExamples };
 
 /**
  * @param {NodeListOf<SVGElement>} communesSvg 
@@ -20,38 +11,29 @@ export function createDropdownList(communesSvg) {
     const searchInput = dropdown.querySelector('input');
     const dropdownList = dropdown.querySelector('ul');
     const dropdownButton = dropdown.querySelector('button');
+    const searchRenderer = createProgressiveSearchRenderer(communesSvg);
 
-    searchInput.addEventListener('input', (e) => {
-        handleSearch(e.target.value, communesSvg);
-        updateURL(e.target.value);
+    searchInput.addEventListener('input', (event) => {
+        searchRenderer.search(event.target.value);
+        updateURL(event.target.value);
     });
 
     populateDropdownList(dropdownList);
-    setupDropdownButton(dropdownButton, dropdown);
+    setupDropdownButton(dropdownButton);
     setupOutsideClickListener(dropdown);
     initializeSearch();
 }
 
 function populateDropdownList(dropdownList) {
     villesRegexExamples.forEach(opt => {
-        const li = createDropdownItem(opt);
-        dropdownList.appendChild(li);
+        dropdownList.appendChild(createDropdownItem(opt));
     });
 }
 
-function createDropdownItem(opt, searchInput) {
+function createDropdownItem(opt) {
     const li = document.createElement('li');
-    
-    const regexSpan = document.createElement('span');
-    regexSpan.textContent = opt.regex;
-    regexSpan.className = 'regex';
-    li.appendChild(regexSpan);
-
-    const descriptionSpan = document.createElement('span');
-    descriptionSpan.textContent = `${opt.description}`;
-    descriptionSpan.className = 'description';
-    descriptionSpan.title = opt.description;
-    li.appendChild(descriptionSpan);
+    li.appendChild(createSpan(opt.regex, 'regex'));
+    li.appendChild(createSpan(opt.description, 'description'));
 
     li.addEventListener('mouseover', () => {
         searchInputValue(opt.regex);
@@ -61,17 +43,28 @@ function createDropdownItem(opt, searchInput) {
     return li;
 }
 
+function createSpan(text, className) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    span.className = className;
+
+    if (className === 'description') {
+        span.title = text;
+    }
+
+    return span;
+}
+
 function searchInputValue(value) {
     const searchInput = document.querySelector('input');
     searchInput.value = value;
-    const inputEvent = new Event('input', {
+    searchInput.dispatchEvent(new Event('input', {
         bubbles: true,
-        cancelable: true
-    });
-    searchInput.dispatchEvent(inputEvent);
+        cancelable: true,
+    }));
 }
 
-function setupDropdownButton(dropdownButton, dropdown) {
+function setupDropdownButton(dropdownButton) {
     dropdownButton.addEventListener('click', toggleDropdown);
 }
 
@@ -111,37 +104,9 @@ function updateURL(value) {
 }
 
 function initializeSearch() {
-    // Initialize search input from URL
     const urlParams = new URLSearchParams(window.location.search);
     const regexParam = urlParams.get('regex');
     if (regexParam) {
         searchInputValue(regexParam);
-    }
-}
-
-/**
- * 
- * @param {string} value regex value
- * @param {NodeListOf<SVGElement>} communesSvg 
- */
-function handleSearch(value, communesSvg) {
-    try {
-        if (value.length > 0) {
-            const regex = new RegExp(value, 'i');
-            communesSvg.forEach(point => {
-                const name = point.querySelector('.label').textContent;
-                if (name && regex.test(name)) {
-                    point.classList.add('visible');
-                } else {
-                    point.classList.remove('visible');
-                }
-            });
-        } else {
-            communesSvg.forEach(point => {
-                point.classList.remove('visible');
-            });
-        }
-    } catch (error) {
-        // Ignore invalid regex
     }
 }
