@@ -9,6 +9,7 @@ export const villesRegexExamples = [
     { regex: 'y{2}', description: 'Contient 2 y consécutifs' },
     { regex: 'heim$', description: "Villes se terminant par 'heim'"},
     { regex: '^plo', description: "Villes commançant par 'Plo'"},
+    { regex: 'seine', description: "Villes contenant 'seine'"},
     { regex: '^(le|la|les) \\w+ \\w+ \\w+$', description: "'le' ou 'la' ou 'les' suivi de 3 mots" },
     { regex: '(a|e|i|o|u)\\1', description: 'Comporte 2 voyelles identiques consécutives' },
     { regex: '^a.*a$', description: 'Commence et finit par la lettre a' },
